@@ -9,14 +9,16 @@ dependencies:
   avatar_glow: ^2.0.2
   cupertino_icons: ^1.0.2
   dropdown_search: ^0.6.1
+  firebase_core: ^2.13.1
+  firebase_database: ^10.2.2
   flutter:
     sdk: flutter
   flutter_launcher_icons: ^0.12.0
   get: 4.6.5
   http: ^0.13.4
+  intl: ^0.18.0
   lottie: ^2.3.2
-  syncfusion_flutter_charts: ^21.2.5
-
+  flutter_echarts: ^2.0.0
 dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_test:

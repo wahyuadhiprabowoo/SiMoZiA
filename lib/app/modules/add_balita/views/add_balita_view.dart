@@ -45,8 +45,15 @@ class AddBalitaView extends GetView<AddBalitaController> {
                         borderRadius: BorderRadius.circular(4))),
               ),
               SizedBox(height: 24),
-              SimpleDropdown(
-                  hint: "Pilih Usia", label: "Usia", items: dataUsia),
+              TextFormField(
+                  controller: controller.usiaC,
+                  readOnly: true,
+                  onTap: () => controller.selectDate(context),
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4)),
+                      labelText: 'Tanggal Lahir',
+                      suffixIcon: Icon(Icons.calendar_today))),
               SizedBox(height: 24),
               TextFormField(
                 controller: controller.namaC,
@@ -91,19 +98,23 @@ class AddBalitaView extends GetView<AddBalitaController> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text(
-                            "0 kg",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 24,
-                                color: Colors.brown.shade900),
+                          Obx(
+                            () => Text(
+                              '${controller.controllerPanjangBayi.panjangBayi} cm',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24,
+                                  color: Colors.brown.shade900),
+                            ),
                           ),
-                          Text(
-                            "0 kg",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 24,
-                                color: Colors.brown.shade900),
+                          Obx(
+                            () => Text(
+                              '${controller.controllerBeratBayi.beratBayi} kg',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24,
+                                  color: Colors.brown.shade900),
+                            ),
                           ),
                         ],
                       ),
@@ -204,6 +215,7 @@ class AddBalitaView extends GetView<AddBalitaController> {
                       colorText: Color(AppColors.black),
                       snackPosition: SnackPosition.TOP,
                     );
+                    controller.getMonth();
                     Get.offNamed(Routes.HOME);
                   },
                   child: Text("Tambah Data")),

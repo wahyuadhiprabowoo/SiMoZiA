@@ -22,6 +22,8 @@ import 'package:ta/app/modules/register/bindings/register_binding.dart';
 import 'package:ta/app/modules/register/views/register_view.dart';
 import 'package:ta/app/modules/splash_screen/bindings/splash_screen_binding.dart';
 import 'package:ta/app/modules/splash_screen/views/splash_screen_view.dart';
+import 'package:ta/app/modules/testing/bindings/testing_binding.dart';
+import 'package:ta/app/modules/testing/views/testing_view.dart';
 
 part 'app_routes.dart';
 
@@ -86,5 +88,10 @@ class AppPages {
       page: () => SplashScreenView(),
       binding: SplashScreenBinding(),
     ),
+    // GetPage(
+    //   name: _Paths.TESTING,
+    //   page: () => TestingView(),
+    //   binding: TestingBinding(),
+    // ),
   ];
 }
