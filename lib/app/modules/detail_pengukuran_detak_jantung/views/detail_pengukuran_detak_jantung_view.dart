@@ -10,7 +10,7 @@ class DetailPengukuranDetakJantungView
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final containerWidth = screenWidth * 0.5;
+    final containerWidth = screenWidth * 0.2;
     return Scaffold(
       appBar: AppBar(
         title: Text('DetailPengukuranDetakJantungView'),
@@ -32,27 +32,73 @@ class DetailPengukuranDetakJantungView
               ),
             ),
             SizedBox(height: 24),
-            Center(
-              child: Container(
-                width: containerWidth,
-                height: 100,
-                child: FirebaseAnimatedList(
-                  query: controller.refDetak,
-                  itemBuilder: (context, snapshot, animation, index) {
-                    controller.detak =
-                        snapshot.child("detak_jantung").value.toString();
-                    return Center(
-                      child: Text(
-                        controller.detak,
-                        style: TextStyle(
-                            fontSize: 96,
-                            color: Colors.brown,
-                            fontWeight: FontWeight.w700),
-                      ),
-                    );
-                  },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // detak
+                Container(
+                  width: containerWidth,
+                  height: 55,
+                  child: FirebaseAnimatedList(
+                    query: controller.refDetak,
+                    itemBuilder: (context, snapshot, animation, index) {
+                      controller.detak =
+                          snapshot.child("detak_jantung").value.toString();
+                      return Center(
+                        child: Text(
+                          controller.detak,
+                          style: TextStyle(
+                              fontSize: 32,
+                              color: Colors.brown,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
+                // sistolik
+                Container(
+                  width: containerWidth,
+                  height: 55,
+                  child: FirebaseAnimatedList(
+                    query: controller.refSistolik,
+                    itemBuilder: (context, snapshot, animation, index) {
+                      controller.sistolik =
+                          snapshot.child("sistolik_balita").value.toString();
+                      return Center(
+                        child: Text(
+                          controller.sistolik,
+                          style: TextStyle(
+                              fontSize: 32,
+                              color: Colors.brown,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                // diastolik
+                Container(
+                  width: containerWidth,
+                  height: 55,
+                  child: FirebaseAnimatedList(
+                    query: controller.refDiastolik,
+                    itemBuilder: (context, snapshot, animation, index) {
+                      controller.diastolik =
+                          snapshot.child("diastolik_balita").value.toString();
+                      return Center(
+                        child: Text(
+                          controller.diastolik,
+                          style: TextStyle(
+                              fontSize: 32,
+                              color: Colors.brown,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ],
         ),

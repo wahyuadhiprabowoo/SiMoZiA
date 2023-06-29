@@ -192,7 +192,7 @@ class HomeView extends GetView<HomeController> {
     try {
       var response = await http.get(
         Uri.parse(
-            "https://tw-demo.my.id/api/puskesmas/${controller.puskesmasId.value}/posyandu"),
+            "${ApiEndPoint.baseUrl}puskesmas/${controller.puskesmasId.value}/posyandu"),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token'
@@ -287,9 +287,13 @@ class SimpleDropdown extends StatelessWidget {
   final String label;
   final String hint;
   var items;
+  String jk;
 
   SimpleDropdown(
-      {required this.label, required this.hint, required this.items});
+      {required this.label,
+      required this.hint,
+      required this.items,
+      required this.jk});
 
   @override
   Widget build(BuildContext context) {
@@ -303,7 +307,10 @@ class SimpleDropdown extends StatelessWidget {
       label: label,
       hint: hint,
       // popupItemDisabled: (String s) => s.startsWith('I'),
-      onChanged: (value) => print(value),
+      onChanged: (value) {
+        jk = value!;
+        print("ini jenis kelamin $jk");
+      },
     );
   }
 }

@@ -10,21 +10,35 @@ import 'package:ta/app/modules/detail_pengukuran_panjang_badan/controllers/detai
 import '../../../api/api_services.dart';
 
 class AddBalitaController extends GetxController {
-// controller
-  TextEditingController namaC = TextEditingController();
-  TextEditingController usiaC = TextEditingController();
+// other controller
   final DetailPengukuranBeratBadanController controllerBeratBayi =
       Get.put(DetailPengukuranBeratBadanController());
   final DetailPengukuranPanjangBadanController controllerPanjangBayi =
       Get.put(DetailPengukuranPanjangBadanController());
   final DetailPengukuranDetakJantungController controllerDetakJantung =
       Get.put(DetailPengukuranDetakJantungController());
+// controller
+  TextEditingController namaC = TextEditingController();
+  TextEditingController usiaC = TextEditingController();
+  TextEditingController namaIbuC = TextEditingController();
+  TextEditingController alamat = TextEditingController();
+
   final count = 0.obs;
 
   // variabel
-  var usia = 0.obs;
+  var foundPosyandu = false.obs;
+  var foundPuskesmas = false.obs;
   var puskesmasId = 0.obs;
   var posyanduId = 0.obs;
+  var usia = 0.obs;
+  var jk = "";
+  // clasifikasi
+  var klasifikasi_detak_jantung = "".obs;
+  var klasifikasi_berat_badan = "".obs;
+  var klasifikasi_panjang_badan = "".obs;
+  // zscore
+  var zscore_panjang_badan = "".obs;
+  var zscore_berat_badan = "".obs;
   // datetime calendar
   var fiveYearsAgo = DateTime.now().subtract(Duration(days: 365 * 5));
   var selectedDate = DateTime.now().obs;
@@ -50,6 +64,13 @@ class AddBalitaController extends GetxController {
     print("${usia.value} bulan");
   }
 
+  // get clasification detak jantung
+  void getDetakJantung() {
+    var result = getKlasifikasiDetakJantung(
+        usia.value, int.parse(controllerDetakJantung.detakBayi.value));
+    klasifikasi_detak_jantung.value = result.klasifikasi;
+  }
+
   // mendapatkan usia bulan
   SelectedUsia getMonth() {
     final diffMonths = (currentDate.year - selectedDate.value.year) * 12 +
@@ -58,28 +79,11 @@ class AddBalitaController extends GetxController {
     return SelectedUsia(selectedUsia: diffMonths);
   }
 
-  // post data to api
-  var dataPostBalita = {
-    "nama_anak": "nama anak",
-    "nama_ibu": "api",
-    "alamat": "alamat ini",
-    "jenis_kelamin": "laki-laki",
-    "umur": 3,
-    "berat_badan": 4,
-    "panjang_badan": 4,
-    "detak_jantung": 4,
-    "zscore_berat_badan": 4,
-    "zscore_panjang_badan": 4,
-    "klasifikasi_berat_badan": "lebih",
-    "klasifikasi_panjang_badan": "normal",
-    "klasifikasi_detak_jantung": "takikardia",
-    "sistolik": 0,
-    "diastolik": 0,
-  };
-
   //  post to api
   Future<void> postBalita(Map<String, dynamic> dataBalita) async {
     String token = await ApiService.token();
+    var berat_badan = double.tryParse(controllerBeratBayi.beratBayi.value);
+    print(berat_badan);
     String url =
         '${ApiEndPoint.baseUrl}puskesmas/$puskesmasId/posyandu/$posyanduId/balita';
     print(url);
@@ -93,7 +97,7 @@ class AddBalitaController extends GetxController {
         body: jsonEncode(dataBalita),
       );
       // try and catch
-      print("ini respon server ${response.statusCode}");
+      print("ini respon server ketika post data ${response.statusCode}");
       if (response.statusCode == 200) {
         // do something
         var json = jsonDecode(response.body);
