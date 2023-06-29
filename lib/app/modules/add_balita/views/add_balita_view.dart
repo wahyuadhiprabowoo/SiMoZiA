@@ -318,6 +318,14 @@ class AddBalitaView extends GetView<AddBalitaController> {
                     // get zscore and classification
                     // detak jantung
                     controller.getDetakJantung();
+                    // menangani null check
+                    if (int.tryParse(controller
+                            .controllerDetakJantung.detakBayi.value) ==
+                        0) {
+                      controller.klasifikasi_detak_jantung.value = "-";
+                    } else {
+                      controller.klasifikasi_detak_jantung.value;
+                    }
                     print(
                         "ini klasifikasi detak jantung ${controller.klasifikasi_detak_jantung.value}");
                     // post data to api
