@@ -44,4 +44,9 @@ class Posyandu {
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
       };
+
+  static List<Posyandu> fromJsonList(List list) {
+    if (list.length == 0) return List<Posyandu>.empty();
+    return list.map((item) => Posyandu.fromJson(item)).toList();
+  }
 }

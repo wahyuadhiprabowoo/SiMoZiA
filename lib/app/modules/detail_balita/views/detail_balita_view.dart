@@ -7,6 +7,8 @@ import '../../../routes/app_pages.dart';
 import '../controllers/detail_balita_controller.dart';
 
 class DetailBalitaView extends GetView<DetailBalitaController> {
+  final balita = Get.arguments;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,9 +23,9 @@ class DetailBalitaView extends GetView<DetailBalitaController> {
             child: Column(
               children: [
                 SizedBox(height: 48),
-                LabelData(label: "Nama"),
+                LabelData(label: "Nama: ${balita.namaAnak}"),
                 SizedBox(height: 24),
-                LabelData(label: "Usia"),
+                LabelData(label: "Usia: ${balita.umur}"),
                 SizedBox(height: 24),
                 LabelData(label: "Nama Ibu"),
                 SizedBox(height: 24),
@@ -49,7 +51,7 @@ class DetailBalitaView extends GetView<DetailBalitaController> {
                   width: double.infinity,
                   child: ElevatedButton(
                       onPressed: () {
-                        Get.toNamed(Routes.EDIT_BALITA);
+                        Get.toNamed(Routes.EDIT_BALITA, arguments: balita);
                       },
                       child: Text("Update Data")),
                 ),

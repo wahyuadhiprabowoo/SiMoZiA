@@ -80,10 +80,14 @@ class AddBalitaView extends GetView<AddBalitaController> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text(
-                            "Panjang Badan",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 16),
+                          Obx(
+                            () => Text(
+                              controller.usia.value < 12
+                                  ? "Panjang Badan"
+                                  : "Tinggi Badan",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 16),
+                            ),
                           ),
                           Text(
                             "Berat Badan",
@@ -176,12 +180,14 @@ class AddBalitaView extends GetView<AddBalitaController> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 12.0),
-                      child: Text(
-                        "0 bpm",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24,
-                            color: Colors.brown.shade900),
+                      child: Obx(
+                        () => Text(
+                          '${controller.controllerDetakJantung.detakBayi} bpm',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24,
+                              color: Colors.brown.shade900),
+                        ),
                       ),
                     ),
                     Padding(

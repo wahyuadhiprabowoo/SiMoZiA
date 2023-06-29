@@ -7,74 +7,104 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ta/app/konstanta/colors.dart';
 import 'package:http/http.dart' as http;
+import 'package:ta/app/models/posyandu.dart';
 import 'package:ta/app/models/puskesmas.dart';
 
+import '../../../api/api_services.dart';
 import '../../../routes/app_pages.dart';
 import '../controllers/home_controller.dart';
 
 // ignore: must_be_immutable
 class HomeView extends GetView<HomeController> {
-  var dataPuskesmas = ["Puskesmas Karangyu", "Puskesmas Tembalang"];
-  var dataPosyandu = ["Posyandu Kami", "Posyandu RT-01", "Posyandu Kita"];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AppBarWidget(),
+              Obx(
+                () => AppBarWidget(name: controller.nameUser.value),
+              ), // get puskesmas
               Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: SimpleDropdown(
-                    hint: "Pilih Puskesmas",
-                    label: "Puskesmas",
-                    items: dataPuskesmas),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 24.0, bottom: 24, right: 24),
-                child: SimpleDropdown(
-                    hint: "Pilih Posyandu",
-                    label: "Posyandu",
-                    items: dataPosyandu),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 24.0, bottom: 24, right: 24),
+                padding: const EdgeInsets.all(24),
                 child: DropdownSearch<Puskesmas>(
+                  // clearButton: Icon(Icons.delete),
+                  showClearButton: true,
                   label: "Puskesmas",
                   hint: "Pilih Puskesmas",
-                  popupItemBuilder: (context, item, isSelected) {
-                    return Container(
+
+                  onFind: onFindMethodPuskesmas,
+                  popupItemBuilder: (context, item, isSelected) => Container(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 24),
                       child: Text("${item.namaPuskesmas}"),
-                    );
-                  },
-                  onFind: (String filter) async {
-                    Uri url = Uri.parse(
-                        "https://admin-puskesmas.000webhostapp.com/api/puskesmas");
+                    ),
+                  ),
+                  itemAsString: (item) => item.namaPuskesmas,
+                  onChanged: (puskesmas) {
                     try {
-                      final response = await http.get(url);
-                      var data =
-                          (jsonDecode(response.body) as Map<String, dynamic>);
-                      var listAllPuskesmas = data["data"] as List<dynamic>;
-                      var models = Puskesmas.fromJsonList(listAllPuskesmas);
-                      return models;
+                      if (puskesmas != null) {
+                        // Melakukan tindakan saat nilai tidak null
+                        controller.puskesmasId.value = puskesmas.id;
+                        controller.foundPuskesmas.value = true;
+                        print(controller.foundPuskesmas.value);
+                        print('Nilai puskesmas tidak null');
+                      } else {
+                        // Melakukan tindakan saat nilai null
+                        print('Nilai puskesmas null ditemukan');
+                        controller.foundPuskesmas.value = false;
+                        print(controller.foundPuskesmas.value);
+                      }
                     } catch (e) {
-                      return List<Puskesmas>.empty();
+                      print(e);
                     }
                   },
-                  itemAsString: (item) => item.namaPuskesmas,
-                  onChanged: (value) {
-                    controller.puskesmasId = value!.id;
-                    print(
-                        "${controller.puskesmasId} dari ${value.namaPuskesmas}");
+                  // showSearchBox: true,
+                ),
+              ),
+              // get posyandu
+
+              Padding(
+                padding:
+                    const EdgeInsets.only(left: 24.0, bottom: 24, right: 24),
+                child: DropdownSearch<Posyandu>(
+                  showClearButton: true,
+                  label: "Posyandu",
+                  hint: "Pilih Posyandu",
+                  popupItemBuilder: (context, item, isSelected) => Container(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 24),
+                      child: Text("${item.namaPosyandu}"),
+                    ),
+                  ),
+                  onFind: onFindMethodPosyandu,
+                  emptyBuilder: (context, searchEntry) =>
+                      Text("data tidak ditemukan"),
+                  itemAsString: (item) => item.namaPosyandu,
+                  onChanged: (posyandu) {
+                    try {
+                      if (posyandu != null) {
+                        // Melakukan tindakan saat nilai tidak null
+                        controller.posyanduId.value = posyandu.id;
+                        controller.foundPosyandu.value = true;
+                        print('Nilai posyandu tidak null');
+                      } else {
+                        // Melakukan tindakan saat nilai null
+                        print('Nilai posyandu null ditemukan');
+                        controller.foundPosyandu.value = false;
+                      }
+                    } catch (e) {
+                      print(e);
+                    }
                   },
                   showSearchBox: true,
                 ),
               ),
+
               Padding(
                 // hasil pengukuran
                 padding: const EdgeInsets.only(left: 24, right: 24, bottom: 24),
@@ -82,28 +112,105 @@ class HomeView extends GetView<HomeController> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("Hasil Pengukuran"),
-                    ElevatedButton(
-                        onPressed: () {}, child: Icon(Icons.filter_list))
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => controller.getAllBalita(),
+                        child: Obx(
+                          () => Text(controller.foundPosyandu.isTrue &&
+                                  controller.foundPuskesmas.isTrue
+                              ? "see balita"
+                              : "not found"),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
-              CardHasilPengukuran(),
-              CardHasilPengukuran(),
+              SizedBox(
+                height: 24,
+              ),
+              Obx(() {
+                final balitas = controller.balitas;
+                print("ini jumlah data balita ${balitas!.length}");
+                if (controller.foundBalita.value == false) {
+                  return Text('No Data');
+                } else {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: balitas.length,
+                    itemBuilder: (context, index) {
+                      final balita = balitas[index];
+
+                      return ListTile(
+                        onTap: () => Get.toNamed(Routes.DETAIL_BALITA,
+                            arguments: balita),
+                        title: Text(balita.namaAnak),
+                        subtitle: Text('Umur: ${balita.umur}'),
+                        trailing: IconButton(
+                            onPressed: () => controller.deleteBalita(balita.id),
+                            icon: Icon(Icons.delete)),
+                      );
+                    },
+                  );
+                }
+              }),
+
+              // CardHasilPengukuran(),
             ],
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed: () => Get.toNamed(Routes.ADD_BALITA),
+          onPressed: () => Get.offNamed(Routes.ADD_BALITA),
           child: Icon(Icons.add)),
     );
+  }
+
+  // onfind method get puskesmas
+  Future<List<Puskesmas>> onFindMethodPuskesmas(String filter) async {
+    String token = await ApiService.getToken();
+    try {
+      var response = await http.get(
+        Uri.parse(ApiEndPoint.baseUrl + ApiEndPoint.authEndPoint.puskesmas),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+      );
+      var data = (jsonDecode(response.body) as Map<String, dynamic>);
+      var listAllPuskesmas = data["data"] as List<dynamic>;
+      var modelPuskesmas = Puskesmas.fromJsonList(listAllPuskesmas);
+      return modelPuskesmas;
+    } catch (e) {
+      return List<Puskesmas>.empty();
+    }
+  }
+
+  // onfind method get posyandu
+  Future<List<Posyandu>> onFindMethodPosyandu(String filter) async {
+    String token = await ApiService.getToken();
+    try {
+      var response = await http.get(
+        Uri.parse(
+            "https://tw-demo.my.id/api/puskesmas/${controller.puskesmasId.value}/posyandu"),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+      );
+      var data = (jsonDecode(response.body) as Map<String, dynamic>);
+      var listAllPosyandu = data["data"] as List<dynamic>;
+      var modelPosyandu = Posyandu.fromJsonList(listAllPosyandu);
+      return modelPosyandu;
+    } catch (e) {
+      return List<Posyandu>.empty();
+    }
   }
 }
 
 class AppBarWidget extends StatelessWidget {
-  const AppBarWidget({
-    Key? key,
-  }) : super(key: key);
+  final String name;
+  const AppBarWidget({required this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -126,24 +233,30 @@ class AppBarWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            "Hi Wahyu",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Color(AppColors.white)),
+                          Expanded(
+                            flex: 4,
+                            child: Text(
+                              "Hii, $name",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(color: Color(AppColors.white)),
+                            ),
                           ),
-                          AvatarGlow(
-                            glowColor: Color(AppColors.white),
-                            endRadius: 30.0,
-                            duration: Duration(milliseconds: 2000),
-                            repeat: true,
-                            showTwoGlows: true,
-                            repeatPauseDuration: Duration(milliseconds: 100),
-                            child: InkWell(
-                              onTap: (() => Get.toNamed(Routes.EDIT_PROFILE)),
-                              child: CircleAvatar(
-                                radius: 25,
-                                backgroundImage: AssetImage(
-                                    'assets/img/logo.png'), // Ganti dengan path gambar avatar Anda
+                          Expanded(
+                            flex: 1,
+                            child: AvatarGlow(
+                              glowColor: Color(AppColors.white),
+                              endRadius: 30.0,
+                              duration: Duration(milliseconds: 2000),
+                              repeat: true,
+                              showTwoGlows: true,
+                              repeatPauseDuration: Duration(milliseconds: 100),
+                              child: InkWell(
+                                onTap: (() => Get.toNamed(Routes.EDIT_PROFILE)),
+                                child: CircleAvatar(
+                                  radius: 25,
+                                  backgroundImage: AssetImage(
+                                      'assets/img/logo.png'), // Ganti dengan path gambar avatar Anda
+                                ),
                               ),
                             ),
                           ),

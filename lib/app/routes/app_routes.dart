@@ -20,6 +20,7 @@ abstract class Routes {
   static const SPLASH_SCREEN = _Paths.SPLASH_SCREEN;
   static const EMBUN_POLINES = _Paths.EMBUN_POLINES;
   static const TESTING = _Paths.TESTING;
+  static const AUTH = _Paths.AUTH;
 }
 
 abstract class _Paths {
@@ -38,4 +39,5 @@ abstract class _Paths {
   static const SPLASH_SCREEN = '/splash-screen';
   static const EMBUN_POLINES = '/embun-polines';
   static const TESTING = '/testing';
+  static const AUTH = '/auth';
 }

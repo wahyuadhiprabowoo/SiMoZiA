@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:ta/app/api/api_services.dart';
 import 'package:ta/app/konstanta/colors.dart';
 import 'package:ta/app/routes/app_pages.dart';
 
@@ -87,18 +88,20 @@ class LoginView extends GetView<LoginController> {
                         ),
                         SizedBox(height: 24),
                         TextFormField(
+                          controller: controller.emailC,
                           autocorrect: false,
                           decoration: InputDecoration(
                               filled: true,
-                              hintText: "Masukan username",
+                              hintText: "Masukan email",
                               fillColor: Color(AppColors.white),
-                              labelText: "Username",
+                              labelText: "email",
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10))),
                         ),
                         SizedBox(height: 32),
                         Container(
                           child: TextFormField(
+                            controller: controller.passC,
                             autocorrect: false,
                             decoration: InputDecoration(
                                 suffixIcon: IconButton(
@@ -132,9 +135,12 @@ class LoginView extends GetView<LoginController> {
                 height: 47,
                 child: ElevatedButton(
                     child: Text("Login Sekarang"),
-                    onPressed: () {
-                      Get.snackbar("berhasil login", "pindah ke halaman home");
-                      Get.toNamed(Routes.HOME);
+                    onPressed: () async {
+                      var body = {
+                        "email": controller.emailC.text.trim(),
+                        "password": controller.passC.text.trim()
+                      };
+                      await ApiService.login(body);
                     }),
               ),
             ),
@@ -152,7 +158,7 @@ class LoginView extends GetView<LoginController> {
                   ),
                   TextButton(
                       onPressed: () {
-                        Get.toNamed(Routes.REGISTER);
+                        Get.offAllNamed(Routes.REGISTER);
                       },
                       child: Text(
                         "Register",

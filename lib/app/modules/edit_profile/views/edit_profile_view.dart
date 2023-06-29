@@ -1,7 +1,8 @@
-import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ta/app/api/api_services.dart';
 import 'package:ta/app/konstanta/colors.dart';
 
 import '../../../routes/app_pages.dart';
@@ -63,9 +64,10 @@ class EditProfileView extends GetView<EditProfileController> {
                     height: 47,
                     child: ElevatedButton(
                       child: Text("Logout"),
-                      onPressed: () {
-                        Get.toNamed(Routes.LOGIN);
-                        Get.snackbar("title", "Keluar dari aplikasi");
+                      onPressed: () async {
+                        // get instanse token
+                        ApiService.clearToken();
+                        Get.offAllNamed(Routes.LOGIN);
                       },
                     )),
               ),
@@ -145,8 +147,7 @@ class CardDetailProfile extends StatelessWidget {
                               decoration: InputDecoration(
                                   suffixIcon: IconButton(
                                       onPressed: () {
-                                        Get.snackbar("Perubahan",
-                                            "Nanti untuk menutup dan menampilkan password");
+                                        Get.offNamed(Routes.HOME);
                                       },
                                       icon:
                                           Icon(Icons.remove_red_eye_outlined)),
@@ -162,8 +163,14 @@ class CardDetailProfile extends StatelessWidget {
                               width: double.infinity,
                               height: 47,
                               child: ElevatedButton(
-                                  onPressed: () {
-                                    Get.snackbar("title", "button di klik");
+                                  onPressed: () async {
+                                    var userData = {
+                                      "name": "wahyuadhip",
+                                      "email": "wahyuadhiprabowo1@gmail.com",
+                                      "password": "nayusanu123",
+                                      "password_confirmation": "nayusanu123"
+                                    };
+                                    await ApiService.updateUser(userData);
                                   },
                                   child: Text("Selesai")),
                             )

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:ta/app/api/api_services.dart';
 import 'package:ta/app/konstanta/colors.dart';
 
 import '../../../routes/app_pages.dart';
@@ -28,6 +29,7 @@ class RegisterView extends GetView<RegisterController> {
             ),
             TextFormField(
               autocorrect: false,
+              controller: controller.nameC,
               decoration: InputDecoration(
                   filled: true,
                   hintText: "Masukan nama",
@@ -38,6 +40,8 @@ class RegisterView extends GetView<RegisterController> {
             ),
             SizedBox(height: 24),
             TextFormField(
+              controller: controller.emailC,
+              keyboardType: TextInputType.emailAddress,
               autocorrect: false,
               decoration: InputDecoration(
                   filled: true,
@@ -49,17 +53,19 @@ class RegisterView extends GetView<RegisterController> {
             ),
             SizedBox(height: 24),
             TextFormField(
+              controller: controller.passC,
               autocorrect: false,
               decoration: InputDecoration(
                   filled: true,
-                  hintText: "Masukan username",
+                  hintText: "Masukan password",
                   fillColor: Color(AppColors.white),
-                  labelText: "Username",
+                  labelText: "password",
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10))),
             ),
             SizedBox(height: 24),
             TextFormField(
+              controller: controller.passConfirmationC,
               autocorrect: false,
               decoration: InputDecoration(
                   suffixIcon: IconButton(
@@ -80,8 +86,15 @@ class RegisterView extends GetView<RegisterController> {
               width: double.infinity,
               height: 47,
               child: ElevatedButton(
-                  onPressed: () {
-                    Get.snackbar("title", "button di klik");
+                  onPressed: () async {
+                    var register = {
+                      'name': controller.nameC.text.trim(),
+                      'email': controller.emailC.text.trim(),
+                      'password': controller.passC.text.trim(),
+                      'password_confirmation':
+                          controller.passConfirmationC.text.trim()
+                    };
+                    await ApiService.register(register);
                   },
                   child: Text("Register")),
             ),
@@ -95,7 +108,7 @@ class RegisterView extends GetView<RegisterController> {
               ),
               TextButton(
                   onPressed: () {
-                    Get.toNamed(Routes.LOGIN);
+                    Get.offNamed(Routes.LOGIN);
                   },
                   child: Text(
                     "Login",
