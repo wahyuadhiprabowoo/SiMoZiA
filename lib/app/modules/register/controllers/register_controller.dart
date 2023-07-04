@@ -7,6 +7,9 @@ class RegisterController extends GetxController {
   TextEditingController passC = TextEditingController();
   TextEditingController passConfirmationC = TextEditingController();
 
+  // variabel
+  var isHidden = true.obs;
+  var isHiddenconf = true.obs;
   final count = 0.obs;
   @override
   void onInit() {

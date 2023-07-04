@@ -21,6 +21,7 @@ abstract class Routes {
   static const EMBUN_POLINES = _Paths.EMBUN_POLINES;
   static const TESTING = _Paths.TESTING;
   static const AUTH = _Paths.AUTH;
+  static const LUPA_PASSWORD = _Paths.LUPA_PASSWORD;
 }
 
 abstract class _Paths {
@@ -40,4 +41,5 @@ abstract class _Paths {
   static const EMBUN_POLINES = '/embun-polines';
   static const TESTING = '/testing';
   static const AUTH = '/auth';
+  static const LUPA_PASSWORD = '/lupa-password';
 }

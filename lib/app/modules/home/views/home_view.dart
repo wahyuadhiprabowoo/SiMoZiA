@@ -51,6 +51,8 @@ class HomeView extends GetView<HomeController> {
                         controller.puskesmasId.value = puskesmas.id;
                         controller.foundPuskesmas.value = true;
                         print(controller.foundPuskesmas.value);
+                        print(
+                            "${ApiEndPoint.baseUrl}puskesmas/${controller.puskesmasId.value}/posyandu");
                         print('Nilai puskesmas tidak null');
                       } else {
                         // Melakukan tindakan saat nilai null
@@ -112,23 +114,19 @@ class HomeView extends GetView<HomeController> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("Hasil Pengukuran"),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () => controller.getAllBalita(),
-                        child: Obx(
-                          () => Text(controller.foundPosyandu.isTrue &&
-                                  controller.foundPuskesmas.isTrue
-                              ? "see balita"
-                              : "not found"),
-                        ),
-                      ),
+                    Obx(
+                      () => controller.foundPosyandu.isTrue &&
+                              controller.foundPuskesmas.isTrue
+                          ? ElevatedButton(
+                              onPressed: () => controller.getAllBalita(),
+                              child: Text("Lihat balita"),
+                            )
+                          : SizedBox(),
                     ),
                   ],
                 ),
               ),
-              SizedBox(
-                height: 24,
-              ),
+
               Obx(() {
                 final balitas = controller.balitas;
                 print("ini jumlah data balita ${balitas!.length}");

@@ -5,11 +5,14 @@ class Balita {
   final String alamat;
   final String jenisKelamin;
   final int umur;
-  final int beratBadan;
-  final int panjangBadan;
+  final DateTime tanggalLahir;
+  final String beratBadan;
+  final String panjangBadan;
   final int detakJantung;
-  final int zscoreBeratBadan;
-  final int zscorePanjangBadan;
+  final int sistolik;
+  final int diastolik;
+  final String zscoreBeratBadan;
+  final String zscorePanjangBadan;
   final String klasifikasiBeratBadan;
   final String klasifikasiPanjangBadan;
   final String klasifikasiDetakJantung;
@@ -25,9 +28,12 @@ class Balita {
     required this.alamat,
     required this.jenisKelamin,
     required this.umur,
+    required this.tanggalLahir,
     required this.beratBadan,
     required this.panjangBadan,
     required this.detakJantung,
+    required this.sistolik,
+    required this.diastolik,
     required this.zscoreBeratBadan,
     required this.zscorePanjangBadan,
     required this.klasifikasiBeratBadan,
@@ -46,9 +52,12 @@ class Balita {
         alamat: json["alamat"],
         jenisKelamin: json["jenis_kelamin"],
         umur: json["umur"],
+        tanggalLahir: DateTime.parse(json["tanggal_lahir"]),
         beratBadan: json["berat_badan"],
         panjangBadan: json["panjang_badan"],
         detakJantung: json["detak_jantung"],
+        sistolik: json["sistolik"],
+        diastolik: json["diastolik"],
         zscoreBeratBadan: json["zscore_berat_badan"],
         zscorePanjangBadan: json["zscore_panjang_badan"],
         klasifikasiBeratBadan: json["klasifikasi_berat_badan"],
@@ -71,9 +80,12 @@ class Balita {
         "alamat": alamat,
         "jenis_kelamin": jenisKelamin,
         "umur": umur,
+        "tanggal_lahir": tanggalLahir.toIso8601String(),
         "berat_badan": beratBadan,
         "panjang_badan": panjangBadan,
         "detak_jantung": detakJantung,
+        "sistolik": sistolik,
+        "diastolik": diastolik,
         "zscore_berat_badan": zscoreBeratBadan,
         "zscore_panjang_badan": zscorePanjangBadan,
         "klasifikasi_berat_badan": klasifikasiBeratBadan,

@@ -16,7 +16,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ta/app/models/user.dart';
 
 import '../routes/app_pages.dart';
 
@@ -55,12 +54,11 @@ class ApiService {
 
     if (response.statusCode == 200) {
       var responseData = jsonDecode(response.body);
-      var name = responseData['user']['name'];
       String token = responseData[
           'token']; // Ganti dengan properti token yang diberikan oleh API Anda
       await setToken(token);
       print(token);
-      print("name: $name");
+      print(responseData);
       Get.offAllNamed(Routes.HOME);
     } else {
       throw Exception('Failed to login');
@@ -79,12 +77,26 @@ class ApiService {
       print("ini respon server ${response.statusCode}");
       if (response.statusCode == 201) {
         var responseData = jsonDecode(response.body);
-        String token = responseData['token'];
-        print(token);
+        String name = responseData["user"]["name"];
+        Get.snackbar(
+          'Berhasil', // Judul Snackbar
+          'Akun dengan nama: ${name}. berhasil dibuat', // Isi Snackbar
+          backgroundColor: Colors.blue, // Warna latar belakang
+          colorText: Colors.white, // Warna teks
+          snackPosition: SnackPosition.BOTTOM, // Posisi Snackbar
+          duration: Duration(seconds: 3), // Durasi tampilan Snackbar
+        );
         Get.offNamed(Routes.LOGIN);
       }
     } catch (e) {
-      print(e);
+      Get.defaultDialog(
+        title: 'Terjadi kesalahan',
+        middleText: '$e',
+        confirm: ElevatedButton(
+          onPressed: () => Get.back(),
+          child: Text('OK'),
+        ),
+      );
     }
   }
 
@@ -112,7 +124,14 @@ class ApiService {
         );
       }
     } catch (e) {
-      print(e);
+      Get.defaultDialog(
+        title: 'Terjadi kesalahan',
+        middleText: '$e',
+        confirm: ElevatedButton(
+          onPressed: () => Get.back(),
+          child: Text('OK'),
+        ),
+      );
     }
   }
 
@@ -136,7 +155,14 @@ class ApiService {
         print(json);
       }
     } catch (e) {
-      print(e);
+      Get.defaultDialog(
+        title: 'Terjadi kesalahan',
+        middleText: '$e',
+        confirm: ElevatedButton(
+          onPressed: () => Get.back(),
+          child: Text('OK'),
+        ),
+      );
     }
   }
 

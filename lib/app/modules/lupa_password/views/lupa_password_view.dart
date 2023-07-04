@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:ta/app/api/api_services.dart';
-import 'package:ta/app/konstanta/colors.dart';
 import 'package:ta/app/routes/app_pages.dart';
 
-import '../controllers/login_controller.dart';
+import '../../../api/api_services.dart';
+import '../../../konstanta/colors.dart';
+import '../controllers/lupa_password_controller.dart';
 
-class LoginView extends GetView<LoginController> {
+class LupaPasswordView extends GetView<LupaPasswordController> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -82,14 +82,14 @@ class LoginView extends GetView<LoginController> {
                     child: Column(
                       children: [
                         Text(
-                          "Login",
+                          "Lupa password",
                           style: TextStyle(
-                              fontWeight: FontWeight.w500, fontSize: 32),
+                              fontWeight: FontWeight.w500, fontSize: 24),
                         ),
-                        SizedBox(height: 24),
+                        SizedBox(height: 32),
                         // email
                         TextFormField(
-                          textInputAction: TextInputAction.next,
+                          textInputAction: TextInputAction.done,
                           controller: controller.emailC,
                           keyboardType: TextInputType.emailAddress,
                           autocorrect: false,
@@ -112,58 +112,27 @@ class LoginView extends GetView<LoginController> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 24),
-                        // password
-                        Obx(
-                          () => Container(
-                            child: TextFormField(
-                              textInputAction: TextInputAction.done,
-                              controller: controller.passC,
-                              obscureText: controller.isHidden.value == true
-                                  ? true
-                                  : false,
-                              autocorrect: false,
-                              decoration: InputDecoration(
-                                prefixIcon: Icon(Icons.key),
-                                suffixIcon: IconButton(
-                                    onPressed: () {
-                                      controller.isHidden.toggle();
-                                    },
-                                    icon: Icon(controller.isHidden == true
-                                        ? Icons.visibility
-                                        : Icons.visibility_off_outlined)),
-                                filled: true,
-                                fillColor: Color(AppColors.white),
-                                labelText: "Password",
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Color(AppColors.secondary)),
-                                    borderRadius: BorderRadius.circular(10)),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.brown),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                errorBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.red),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  print("masukan password anda");
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                        ),
                         // text button
                         Container(
                           alignment: Alignment.bottomRight,
                           child: TextButton(
-                            child: Text("Lupa password?"),
-                            onPressed: () => Get.offNamed(Routes.LUPA_PASSWORD),
+                            child: Text("Masuk kembali"),
+                            onPressed: () => Get.offNamed(Routes.LOGIN),
                           ),
+                        ),
+                        // kirim button
+                        SizedBox(
+                          height: 28,
+                        ),
+                        Container(
+                          width: double.infinity,
+                          height: 47,
+                          child: ElevatedButton(
+                              child: Text("Kirim"),
+                              onPressed: () async {
+                                await ApiService.forgotPassword(
+                                    controller.emailC.text);
+                              }),
                         ),
                       ],
                     ),
@@ -171,50 +140,6 @@ class LoginView extends GetView<LoginController> {
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 24.0,
-                right: 24,
-                top: 24,
-              ),
-              child: Container(
-                width: double.infinity,
-                height: 47,
-                child: ElevatedButton(
-                    child: Text("Masuk"),
-                    onPressed: () async {
-                      var body = {
-                        "email": controller.emailC.text.trim(),
-                        "password": controller.passC.text.trim()
-                      };
-                      await ApiService.login(body);
-                    }),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 24, right: 24, bottom: 24),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Tidak memiliki akun?",
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Color(AppColors.white),
-                        fontWeight: FontWeight.w600),
-                  ),
-                  TextButton(
-                      onPressed: () {
-                        Get.offAllNamed(Routes.REGISTER);
-                      },
-                      child: Text(
-                        "Buat akun",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                      )),
-                ],
-              ),
-            )
           ],
         ),
       ),

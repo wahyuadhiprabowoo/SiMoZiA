@@ -53,7 +53,7 @@ class DetailBalitaView extends GetView<DetailBalitaController> {
                       onPressed: () {
                         Get.toNamed(Routes.EDIT_BALITA, arguments: balita);
                       },
-                      child: Text("Update Data")),
+                      child: Text("Edit Data")),
                 ),
                 SizedBox(height: 24),
               ],

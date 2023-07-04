@@ -18,6 +18,8 @@ import 'package:ta/app/modules/home/bindings/home_binding.dart';
 import 'package:ta/app/modules/home/views/home_view.dart';
 import 'package:ta/app/modules/login/bindings/login_binding.dart';
 import 'package:ta/app/modules/login/views/login_view.dart';
+import 'package:ta/app/modules/lupa_password/bindings/lupa_password_binding.dart';
+import 'package:ta/app/modules/lupa_password/views/lupa_password_view.dart';
 import 'package:ta/app/modules/register/bindings/register_binding.dart';
 import 'package:ta/app/modules/register/views/register_view.dart';
 import 'package:ta/app/modules/splash_screen/bindings/splash_screen_binding.dart';
@@ -85,6 +87,11 @@ class AppPages {
       name: _Paths.SPLASH_SCREEN,
       page: () => SplashScreenView(),
       binding: SplashScreenBinding(),
+    ),
+    GetPage(
+      name: _Paths.LUPA_PASSWORD,
+      page: () => LupaPasswordView(),
+      binding: LupaPasswordBinding(),
     ),
   ];
 }

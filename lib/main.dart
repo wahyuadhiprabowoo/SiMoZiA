@@ -19,6 +19,8 @@ void main() async {
       title: "Si MoZiA",
       theme: ThemeData(fontFamily: 'Roboto', primarySwatch: Colors.brown),
       initialRoute: token.length == 0 ? Routes.SPLASH_SCREEN : Routes.HOME,
+      // testing view
+      // initialRoute: Routes.LUPA_PASSWORD,
       getPages: AppPages.routes,
     ),
   );

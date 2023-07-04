@@ -37,18 +37,20 @@ class HomeController extends GetxController {
       // print(data);
       // data dari api -> model yang telah dipersiapkan
       // print(data);
-      // send url to urlBalita
-      print("url balita ${urlBalita.value}");
-      print("---");
-      if (data.isEmpty) {
-        balitas?.clear();
-      } else {
-        balitas?.assignAll(data.map((e) => Balita.fromJson(e)).toList());
+      if (response.statusCode == 200) {
+        print("url balita ${urlBalita.value}");
+        print("---");
+        if (data.isEmpty) {
+          balitas?.clear();
+        } else {
+          balitas?.assignAll(data.map((e) => Balita.fromJson(e)).toList());
+        }
+        // found balita == true
+        foundBalita.value = true;
       }
-      // found balita == true
-      foundBalita.value = true;
     } catch (e) {
       foundBalita.value = false;
+      print(e);
     }
     print("found balita ${foundBalita.value}");
   }

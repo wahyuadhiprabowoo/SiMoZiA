@@ -7,7 +7,6 @@ import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:ta/app/api/api_services.dart';
 import 'package:ta/app/models/posyandu.dart';
-import 'package:ta/app/modules/home/views/home_view.dart';
 
 import '../../../models/puskesmas.dart';
 import '../../../routes/app_pages.dart';
@@ -15,7 +14,6 @@ import '../controllers/add_balita_controller.dart';
 
 // ignore: must_be_immutable
 class AddBalitaView extends GetView<AddBalitaController> {
-  var dataJenisKelamin = ["laki-laki", "perempuan"];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,6 +120,7 @@ class AddBalitaView extends GetView<AddBalitaController> {
                       labelText: 'Tanggal Lahir',
                       suffixIcon: Icon(Icons.calendar_today))),
               SizedBox(height: 24),
+              // nama ibu
               TextFormField(
                 controller: controller.namaIbuC,
                 autocorrect: false,
@@ -130,9 +129,8 @@ class AddBalitaView extends GetView<AddBalitaController> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(4))),
               ),
-              // alamat
               SizedBox(height: 24),
-
+              // alamat
               TextFormField(
                 controller: controller.alamat,
                 autocorrect: false,
@@ -142,13 +140,19 @@ class AddBalitaView extends GetView<AddBalitaController> {
                         borderRadius: BorderRadius.circular(4))),
               ),
               SizedBox(height: 24),
-              SimpleDropdown(
-                hint: "Pilih jenis Kelamin",
-                items: dataJenisKelamin,
+              // jenis kelamin
+              DropdownSearch<String>(
+                mode: Mode.MENU,
+                maxHeight: 132.0,
+                showSelectedItem: true,
+                items: ["laki-laki", "perempuan"],
                 label: "Jenis Kelamin",
-                jk: controller.jk,
+                hint: "Pilih Jenis Kelamin",
+                // popupItemDisabled: (String s) => s.startsWith('I'),
+                onChanged: (value) => controller.jk = value!,
               ),
               SizedBox(height: 24),
+              // caard berat dan panjang
               Card(
                 elevation: 4,
                 clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -226,7 +230,7 @@ class AddBalitaView extends GetView<AddBalitaController> {
                   ],
                 ),
               ),
-              SizedBox(height: 12),
+              SizedBox(height: 16),
               Card(
                 elevation: 4,
                 clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -275,7 +279,7 @@ class AddBalitaView extends GetView<AddBalitaController> {
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Obx(
                             () => Text(
-                              '${controller.controllerDetakJantung.sistolikBayi.value} bpm',
+                              '${controller.controllerDetakJantung.sistolikBayi.value} sia',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20,
@@ -288,7 +292,7 @@ class AddBalitaView extends GetView<AddBalitaController> {
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Obx(
                             () => Text(
-                              '${controller.controllerDetakJantung.diastolikBayi.value} bpm',
+                              '${controller.controllerDetakJantung.diastolikBayi.value} dia',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20,
@@ -314,10 +318,13 @@ class AddBalitaView extends GetView<AddBalitaController> {
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size.fromHeight(50), // NEW
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     // get zscore and classification
-                    // detak jantung
+                    // detak jantung, panjangm berat
                     controller.getDetakJantung();
+                    controller.getBeratBadan();
+                    controller.getPanjangBadan();
+                    controller.getDateTimeTanggalLahir();
                     // menangani null check
                     if (int.tryParse(controller
                             .controllerDetakJantung.detakBayi.value) ==
@@ -326,35 +333,40 @@ class AddBalitaView extends GetView<AddBalitaController> {
                     } else {
                       controller.klasifikasi_detak_jantung.value;
                     }
-                    print(
-                        "ini klasifikasi detak jantung ${controller.klasifikasi_detak_jantung.value}");
                     // post data to api
                     var dataPostBalita = {
                       "nama_anak": controller.namaC.text,
-                      "nama_ibu": controller.namaIbuC,
-                      "alamat": controller.alamat,
+                      "nama_ibu": controller.namaIbuC.text,
+                      "alamat": controller.alamat.text,
                       "jenis_kelamin": controller.jk,
                       "umur": controller.usia.value,
-                      "berat_badan": double.tryParse(
-                          controller.controllerBeratBayi.beratBayi.value),
-                      "panjang_badan": double.tryParse(
-                          controller.controllerPanjangBayi.panjangBayi.value),
-                      "detak_jantung": int.tryParse(
-                          controller.controllerDetakJantung.detakBayi.value),
-                      "zscore_berat_badan": 4,
-                      "zscore_panjang_badan": 4,
-                      "klasifikasi_berat_badan": "lebih",
-                      "klasifikasi_panjang_badan": "normal",
+                      "tanggal_lahir": controller.tanggal_lahir,
+                      "berat_badan":
+                          controller.controllerBeratBayi.beratBayi.value,
+                      "panjang_badan":
+                          controller.controllerPanjangBayi.panjangBayi.value,
+                      "detak_jantung":
+                          controller.controllerDetakJantung.detakBayi.value,
+                      "zscore_berat_badan":
+                          controller.zscore_berat_badan.value.toString(),
+                      "zscore_panjang_badan":
+                          controller.zscore_panjang_badan.value.toString(),
+                      "klasifikasi_berat_badan":
+                          controller.klasifikasi_berat_badan.value,
+                      "klasifikasi_panjang_badan":
+                          controller.klasifikasi_panjang_badan.value,
                       "klasifikasi_detak_jantung":
-                          controller.klasifikasi_detak_jantung,
+                          controller.klasifikasi_detak_jantung.value,
                       "sistolik": int.tryParse(
                           controller.controllerDetakJantung.sistolikBayi.value),
                       "diastolik": int.tryParse(controller
                           .controllerDetakJantung.diastolikBayi.value),
                     };
                     print(dataPostBalita);
-                    controller.getMonth();
+                    await controller.postBalita(dataPostBalita);
                     Get.offNamed(Routes.HOME);
+                    controller.showMySnackbar(
+                        context, "Data telah berhasil dibuat");
                   },
                   child: Text("Tambah Data")),
             ],
@@ -364,6 +376,7 @@ class AddBalitaView extends GetView<AddBalitaController> {
     );
   }
 
+// get puskesmas
   Future<List<Puskesmas>> onFindMethodPuskesmas(String filter) async {
     String token = await ApiService.getToken();
     try {
@@ -404,5 +417,3 @@ class AddBalitaView extends GetView<AddBalitaController> {
     }
   }
 }
-
-// onfind method get puskesmas

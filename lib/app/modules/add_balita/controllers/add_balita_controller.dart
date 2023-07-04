@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:ta/app/konstanta/colors.dart';
 import 'package:ta/app/modules/detail_pengukuran_berat_badan/controllers/detail_pengukuran_berat_badan_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:ta/app/modules/detail_pengukuran_detak_jantung/controllers/detail_pengukuran_detak_jantung_controller.dart';
@@ -32,18 +33,21 @@ class AddBalitaController extends GetxController {
   var posyanduId = 0.obs;
   var usia = 0.obs;
   var jk = "";
+  late String tanggal_lahir;
   // clasifikasi
   var klasifikasi_detak_jantung = "".obs;
   var klasifikasi_berat_badan = "".obs;
   var klasifikasi_panjang_badan = "".obs;
   // zscore
-  var zscore_panjang_badan = "".obs;
-  var zscore_berat_badan = "".obs;
+  var zscore_panjang_badan = 0.0.obs;
+  var zscore_berat_badan = 0.0.obs;
   // datetime calendar
   var fiveYearsAgo = DateTime.now().subtract(Duration(days: 365 * 5));
   var selectedDate = DateTime.now().obs;
   DateTime currentDate = DateTime.now();
+  // usia
 
+// open calender
   void selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
@@ -71,6 +75,28 @@ class AddBalitaController extends GetxController {
     klasifikasi_detak_jantung.value = result.klasifikasi;
   }
 
+  // get clasification panjang badan
+  void getPanjangBadan() {
+    var result = getKlasifikasiPanjangBadan(
+        jk, usia.value, double.parse(controllerPanjangBayi.panjangBayi.value));
+    klasifikasi_panjang_badan.value = result.klasifikasi;
+    zscore_panjang_badan.value = result.zscore;
+  }
+
+  // get clasification berat badan
+  void getBeratBadan() {
+    var result = getKlasifikasiBeratBadan(
+        jk, usia.value, double.parse(controllerBeratBayi.beratBayi.value));
+    klasifikasi_berat_badan.value = result.klasifikasi;
+    zscore_berat_badan.value = result.zscore;
+  }
+
+// get datetime tanggal lahir
+  void getDateTimeTanggalLahir() {
+    var result = getDateTimeTglLahir(usiaC.text);
+    tanggal_lahir = result.tanggal_lahir;
+  }
+
   // mendapatkan usia bulan
   SelectedUsia getMonth() {
     final diffMonths = (currentDate.year - selectedDate.value.year) * 12 +
@@ -79,13 +105,27 @@ class AddBalitaController extends GetxController {
     return SelectedUsia(selectedUsia: diffMonths);
   }
 
+  // get string tanggal lahir
+  GetStringTanggalLahir getTanggalLahir(DateTime tanggalLahir) {
+    String formattedDate = DateFormat('dd MMM yyyy').format(tanggalLahir);
+    return GetStringTanggalLahir(tanggal_lahir: formattedDate);
+  }
+
+  // get datetime tanggal lahir
+  GetDateTimeTanggalLahir getDateTimeTglLahir(String tanggal_lahir) {
+    DateTime dateTime = DateFormat('dd MMM yyyy').parse(tanggal_lahir);
+    String formattedDateTime =
+        DateFormat("yyyy-MM-ddTHH:mm:ss.SSSSSSZ").format(dateTime);
+    return GetDateTimeTanggalLahir(tanggal_lahir: formattedDateTime);
+  }
+
   //  post to api
   Future<void> postBalita(Map<String, dynamic> dataBalita) async {
     String token = await ApiService.token();
     var berat_badan = double.tryParse(controllerBeratBayi.beratBayi.value);
     print(berat_badan);
     String url =
-        '${ApiEndPoint.baseUrl}puskesmas/$puskesmasId/posyandu/$posyanduId/balita';
+        '${ApiEndPoint.baseUrl}puskesmas/${puskesmasId.value}/posyandu/${posyanduId.value}/balita';
     print(url);
     try {
       var response = await http.post(
@@ -98,14 +138,25 @@ class AddBalitaController extends GetxController {
       );
       // try and catch
       print("ini respon server ketika post data ${response.statusCode}");
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         // do something
         var json = jsonDecode(response.body);
+        print("respon api");
         print(json);
       }
     } catch (e) {
       print(e);
     }
+  }
+
+  // show snackbar
+  void showMySnackbar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      backgroundColor: Color(AppColors.secondary),
+      content: Text(message),
+      duration: Duration(seconds: 3),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -1676,7 +1727,8 @@ ZscoreAndClasificationBerat getKlasifikasiBeratBadan(
         klasifikasiBeratBadan = "Lebih";
       }
     }
-  } else if (jk == 'perempuan') {
+  }
+  if (jk == 'perempuan') {
     // do something
     // condition usia 0 klasifikasi berat badan
     if (usia == 0) {
@@ -4594,7 +4646,7 @@ ZscoreAndClasificationPanjang getKlasifikasiPanjangBadan(
     print(
         "panjang badan: $panjangBadan dengan zscore: $resultToString dengan klasifikasi: $klasifikasiPanjangBadan");
   }
-  if (jk == "perempuan") {
+  if (jk == 'perempuan') {
     // condition usia 0 deteksi panjang badan
     if (usia == 0) {
       min1Sd = 47.3;
@@ -6038,7 +6090,22 @@ ZscoreAndClasificationPanjang getKlasifikasiPanjangBadan(
     // end condition
   }
   // print terminal
+  print(
+      "zscore panjang/tinggi: ${resultToString} dengan klasifikasi: ${klasifikasiPanjangBadan} ");
   return ZscoreAndClasificationPanjang(
       zscore: double.parse(resultToString),
       klasifikasi: klasifikasiPanjangBadan);
+}
+
+// get string tanggal_lahir
+class GetStringTanggalLahir {
+  String tanggal_lahir;
+  GetStringTanggalLahir({required this.tanggal_lahir});
+}
+
+// get datetime tanggal_lahir
+class GetDateTimeTanggalLahir {
+  String tanggal_lahir;
+  GetDateTimeTanggalLahir(
+      {required this.tanggal_lahir}); // Output: 2023-07-01 00:00:00.000
 }

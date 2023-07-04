@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LoginController extends GetxController {
-  // controller
+class LupaPasswordController extends GetxController {
   TextEditingController emailC = TextEditingController();
-  TextEditingController passC = TextEditingController();
-  var isHidden = true.obs;
+
+  final count = 0.obs;
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
   }
 
@@ -17,8 +16,6 @@ class LoginController extends GetxController {
   }
 
   @override
-  void onClose() {
-    emailC.dispose();
-    passC.dispose();
-  }
+  void onClose() {}
+  void increment() => count.value++;
 }

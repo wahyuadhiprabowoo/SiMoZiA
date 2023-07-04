@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ta/app/api/api_services.dart';
 import 'package:ta/app/konstanta/colors.dart';
+import 'package:ta/utils/main.dart';
 
 import '../../../routes/app_pages.dart';
 import '../controllers/register_controller.dart';
@@ -23,63 +24,129 @@ class RegisterView extends GetView<RegisterController> {
               height: satu_empat,
               alignment: Alignment.center,
               child: Text(
-                "Registrasi",
+                "Buat Akun",
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
               ),
             ),
+            // nama
             TextFormField(
               autocorrect: false,
+              keyboardType: TextInputType.name,
+              textInputAction: TextInputAction.next,
               controller: controller.nameC,
               decoration: InputDecoration(
-                  filled: true,
-                  hintText: "Masukan nama",
-                  fillColor: Color(AppColors.white),
-                  labelText: "Nama",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10))),
+                prefixIcon: Icon(Icons.person),
+                filled: true,
+                fillColor: Color(AppColors.white),
+                labelText: "Nama",
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(AppColors.accent)),
+                    borderRadius: BorderRadius.circular(10)),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.brown),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                errorBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.red),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
             ),
             SizedBox(height: 24),
+            // email
             TextFormField(
+              textInputAction: TextInputAction.next,
               controller: controller.emailC,
               keyboardType: TextInputType.emailAddress,
               autocorrect: false,
               decoration: InputDecoration(
-                  filled: true,
-                  hintText: "Masukan email",
-                  fillColor: Color(AppColors.white),
-                  labelText: "Email",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10))),
+                prefixIcon: Icon(Icons.email_outlined),
+                filled: true,
+                fillColor: Color(AppColors.white),
+                labelText: "Email",
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(AppColors.accent)),
+                    borderRadius: BorderRadius.circular(10)),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.brown),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                errorBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.red),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
             ),
             SizedBox(height: 24),
-            TextFormField(
-              controller: controller.passC,
-              autocorrect: false,
-              decoration: InputDecoration(
-                  filled: true,
-                  hintText: "Masukan password",
-                  fillColor: Color(AppColors.white),
-                  labelText: "password",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10))),
-            ),
-            SizedBox(height: 24),
-            TextFormField(
-              controller: controller.passConfirmationC,
-              autocorrect: false,
-              decoration: InputDecoration(
+            // password
+            Obx(
+              () => TextFormField(
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                controller: controller.passC,
+                obscureText: controller.isHidden.value == true ? true : false,
+                autocorrect: false,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.key),
                   suffixIcon: IconButton(
                       onPressed: () {
-                        Get.snackbar("Perubahan",
-                            "Nanti untuk menutup dan menampilkan password");
+                        controller.isHidden.toggle();
                       },
-                      icon: Icon(Icons.remove_red_eye_outlined)),
+                      icon: Icon(controller.isHidden == true
+                          ? Icons.visibility
+                          : Icons.visibility_off_outlined)),
                   filled: true,
                   fillColor: Color(AppColors.white),
-                  hintText: "Masukan password",
                   labelText: "Password",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10))),
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Color(AppColors.accent)),
+                      borderRadius: BorderRadius.circular(10)),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.brown),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  errorBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 24),
+            // Ulang password
+            Obx(
+              () => TextFormField(
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.done,
+                controller: controller.passConfirmationC,
+                obscureText:
+                    controller.isHiddenconf.value == true ? true : false,
+                autocorrect: false,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.key),
+                  suffixIcon: IconButton(
+                      onPressed: () {
+                        controller.isHiddenconf.toggle();
+                      },
+                      icon: Icon(controller.isHiddenconf == true
+                          ? Icons.visibility
+                          : Icons.visibility_off_outlined)),
+                  filled: true,
+                  fillColor: Color(AppColors.white),
+                  labelText: "Ulangi password",
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Color(AppColors.accent)),
+                      borderRadius: BorderRadius.circular(10)),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.brown),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  errorBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
             ),
             SizedBox(height: 24),
             Container(
@@ -96,7 +163,7 @@ class RegisterView extends GetView<RegisterController> {
                     };
                     await ApiService.register(register);
                   },
-                  child: Text("Register")),
+                  child: Text("Buat akun")),
             ),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Text(
@@ -111,7 +178,7 @@ class RegisterView extends GetView<RegisterController> {
                     Get.offNamed(Routes.LOGIN);
                   },
                   child: Text(
-                    "Login",
+                    "Masuk",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ))
             ])
