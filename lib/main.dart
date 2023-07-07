@@ -20,7 +20,7 @@ void main() async {
       theme: ThemeData(fontFamily: 'Roboto', primarySwatch: Colors.brown),
       initialRoute: token.length == 0 ? Routes.SPLASH_SCREEN : Routes.HOME,
       // testing view
-      // initialRoute: Routes.LUPA_PASSWORD,
+      // initialRoute: Routes.EDIT_PROFILE,
       getPages: AppPages.routes,
     ),
   );

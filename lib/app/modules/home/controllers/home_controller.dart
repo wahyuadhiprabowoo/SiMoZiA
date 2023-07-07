@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:ta/app/api/api_services.dart';
@@ -16,6 +17,8 @@ class HomeController extends GetxController {
   var foundBalita = false.obs;
   var foundPosyandu = false.obs;
   var foundPuskesmas = false.obs;
+  var namaPuskesmas = "".obs;
+  var namaPosyandu = "".obs;
   RxList<Balita>? balitas = RxList<Balita>([]);
 
   Future<void> getAllBalita() async {
@@ -107,7 +110,14 @@ class HomeController extends GetxController {
         nameUser.value = user.name;
       }
     } catch (e) {
-      print(e);
+      Get.defaultDialog(
+        title: 'Terjadi kesalahan',
+        middleText: '$e',
+        confirm: ElevatedButton(
+          onPressed: () => Get.back(),
+          child: Text('OK'),
+        ),
+      );
     }
   }
 

@@ -117,7 +117,7 @@ class LupaPasswordView extends GetView<LupaPasswordController> {
                           alignment: Alignment.bottomRight,
                           child: TextButton(
                             child: Text("Masuk kembali"),
-                            onPressed: () => Get.offNamed(Routes.LOGIN),
+                            onPressed: () => Get.offAllNamed(Routes.LOGIN),
                           ),
                         ),
                         // kirim button

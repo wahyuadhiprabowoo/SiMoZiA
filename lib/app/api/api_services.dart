@@ -46,22 +46,50 @@ class ApiService {
 
   // login api
   static Future<void> login(Map<String, dynamic> body) async {
-    var response = await http.post(
-      Uri.parse(ApiEndPoint.baseUrl + ApiEndPoint.authEndPoint.loginEmail),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(body),
-    );
+    try {
+      var response = await http.post(
+        Uri.parse(ApiEndPoint.baseUrl + ApiEndPoint.authEndPoint.loginEmail),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(body),
+      );
 
-    if (response.statusCode == 200) {
-      var responseData = jsonDecode(response.body);
-      String token = responseData[
-          'token']; // Ganti dengan properti token yang diberikan oleh API Anda
-      await setToken(token);
-      print(token);
-      print(responseData);
-      Get.offAllNamed(Routes.HOME);
-    } else {
-      throw Exception('Failed to login');
+      if (response.statusCode == 200) {
+        var responseData = jsonDecode(response.body);
+        String token = responseData[
+            'token']; // Ganti dengan properti token yang diberikan oleh API Anda
+        await setToken(token);
+        print(token);
+        print(responseData);
+        Get.offAllNamed(Routes.HOME);
+      }
+      if (response.statusCode == 401) {
+        Get.dialog(
+          AlertDialog(
+            title: Text('Peringatan'),
+            content: Text('Email atau password salah!'),
+            actions: [
+              ElevatedButton(
+                  onPressed: () async {
+                    await ApiService.clearToken();
+                    Get.back();
+                  },
+                  child: Text("Ya"))
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      Get.dialog(AlertDialog(
+        title: Text('Peringatan'),
+        content: Text('Terjadi kesalahan, yaitu: $e'),
+        actions: [
+          ElevatedButton(
+              onPressed: () async {
+                Get.back();
+              },
+              child: Text("Ya"))
+        ],
+      ));
     }
   }
 
@@ -75,28 +103,47 @@ class ApiService {
       );
       // try and catch
       print("ini respon server ${response.statusCode}");
+      if (response.statusCode == 400) {
+        Get.dialog(AlertDialog(
+          title: Text('Peringatan'),
+          content: Text('Terjadi kesalahan, periksa data diri!'),
+          actions: [
+            ElevatedButton(
+                onPressed: () async {
+                  Get.back();
+                },
+                child: Text("Ya"))
+          ],
+        ));
+      }
       if (response.statusCode == 201) {
         var responseData = jsonDecode(response.body);
         String name = responseData["user"]["name"];
-        Get.snackbar(
-          'Berhasil', // Judul Snackbar
-          'Akun dengan nama: ${name}. berhasil dibuat', // Isi Snackbar
-          backgroundColor: Colors.blue, // Warna latar belakang
-          colorText: Colors.white, // Warna teks
-          snackPosition: SnackPosition.BOTTOM, // Posisi Snackbar
-          duration: Duration(seconds: 3), // Durasi tampilan Snackbar
-        );
+        Get.dialog(AlertDialog(
+          title: Text('Berhasil'),
+          content: Text('Akun dengan nama: $name berhasil dibuat'),
+          actions: [
+            ElevatedButton(
+                onPressed: () async {
+                  Get.offAllNamed(Routes.LOGIN);
+                },
+                child: Text("Ya"))
+          ],
+        ));
         Get.offNamed(Routes.LOGIN);
       }
     } catch (e) {
-      Get.defaultDialog(
-        title: 'Terjadi kesalahan',
-        middleText: '$e',
-        confirm: ElevatedButton(
-          onPressed: () => Get.back(),
-          child: Text('OK'),
-        ),
-      );
+      Get.dialog(AlertDialog(
+        title: Text('Peringatan'),
+        content: Text('Terjadi kesalahan, yaitu: $e'),
+        actions: [
+          ElevatedButton(
+              onPressed: () async {
+                Get.back();
+              },
+              child: Text("Ya"))
+        ],
+      ));
     }
   }
 
@@ -114,24 +161,45 @@ class ApiService {
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
         var newPassword = responseData["new_password"];
-        Get.defaultDialog(
-          title: 'Password Baru',
-          middleText: '$newPassword',
-          confirm: ElevatedButton(
-            onPressed: () => Get.offNamed(Routes.LOGIN),
-            child: Text('OK'),
+        Get.dialog(AlertDialog(
+          title: Text('Password Baru'),
+          content: Text('Password baru anda: $newPassword'),
+          actions: [
+            ElevatedButton(
+                onPressed: () async {
+                  Get.offAllNamed(Routes.LOGIN);
+                },
+                child: Text("Ya"))
+          ],
+        ));
+      }
+      if (response.statusCode == 404) {
+        Get.dialog(
+          AlertDialog(
+            title: Text('Peringatan'),
+            content: Text('Email tidak ditemukan!'),
+            actions: [
+              ElevatedButton(
+                  onPressed: () async {
+                    Get.back();
+                  },
+                  child: Text("Ya"))
+            ],
           ),
         );
       }
     } catch (e) {
-      Get.defaultDialog(
-        title: 'Terjadi kesalahan',
-        middleText: '$e',
-        confirm: ElevatedButton(
-          onPressed: () => Get.back(),
-          child: Text('OK'),
-        ),
-      );
+      Get.dialog(AlertDialog(
+        title: Text('Peringatan'),
+        content: Text('Terjadi kesalahan, yaitu: $e'),
+        actions: [
+          ElevatedButton(
+              onPressed: () async {
+                Get.back();
+              },
+              child: Text("Ya"))
+        ],
+      ));
     }
   }
 
@@ -155,29 +223,17 @@ class ApiService {
         print(json);
       }
     } catch (e) {
-      Get.defaultDialog(
-        title: 'Terjadi kesalahan',
-        middleText: '$e',
-        confirm: ElevatedButton(
-          onPressed: () => Get.back(),
-          child: Text('OK'),
-        ),
-      );
-    }
-  }
-
-  // sample fetch data
-  static Future<String> fetchData() async {
-    String token = await getToken();
-    var response = await http.get(
-      Uri.parse('${ApiEndPoint.baseUrl}${ApiEndPoint.authEndPoint.loginEmail}'),
-      headers: {'Authorization': 'Bearer $token'},
-    );
-
-    if (response.statusCode == 200) {
-      return response.body;
-    } else {
-      throw Exception('Failed to fetch data');
+      Get.dialog(AlertDialog(
+        title: Text('Peringatan'),
+        content: Text('Terjadi kesalahan, yaitu: $e'),
+        actions: [
+          ElevatedButton(
+              onPressed: () async {
+                Get.back();
+              },
+              child: Text("Ya"))
+        ],
+      ));
     }
   }
 }

@@ -42,4 +42,6 @@ flutter:
   assets:
     - assets/img/foto.png
     - assets/img/logo.png
+    - assets/img/profile.png
     - assets/img/logo-dengan-tulisan.png
+    - assets/lotties/not-found.json

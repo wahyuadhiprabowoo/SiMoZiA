@@ -78,7 +78,7 @@ class LoginView extends GetView<LoginController> {
                   right: 48,
                   child: Container(
                     width: containerWidth,
-                    height: 250,
+                    height: 300,
                     child: Column(
                       children: [
                         Text(

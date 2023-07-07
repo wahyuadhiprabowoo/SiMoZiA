@@ -29,6 +29,8 @@ class EditBalitaView extends GetView<EditBalitaController> {
               children: [
                 // nama
                 TextFormField(
+                  keyboardType: TextInputType.name,
+                  textInputAction: TextInputAction.next,
                   controller: controller.namaC,
                   autocorrect: false,
                   decoration: InputDecoration(
@@ -39,6 +41,7 @@ class EditBalitaView extends GetView<EditBalitaController> {
                 SizedBox(height: 24),
                 // tanggal lahir
                 TextFormField(
+                    textInputAction: TextInputAction.next,
                     controller: controller.usiaC,
                     readOnly: true,
                     onTap: () => controller.selectDate(context),
@@ -50,6 +53,8 @@ class EditBalitaView extends GetView<EditBalitaController> {
                 SizedBox(height: 24),
                 // nama ibu
                 TextFormField(
+                  keyboardType: TextInputType.name,
+                  textInputAction: TextInputAction.next,
                   controller: controller.namaIbuC,
                   autocorrect: false,
                   decoration: InputDecoration(
@@ -60,6 +65,8 @@ class EditBalitaView extends GetView<EditBalitaController> {
                 SizedBox(height: 24),
                 // alamat
                 TextFormField(
+                  keyboardType: TextInputType.name,
+                  textInputAction: TextInputAction.next,
                   controller: controller.alamatC,
                   autocorrect: false,
                   decoration: InputDecoration(
@@ -111,8 +118,12 @@ class EditBalitaView extends GetView<EditBalitaController> {
                           ],
                         ),
                       ),
+                      Divider(
+                        color: Colors.grey, // Warna garis bawah
+                        thickness: 0.7, // Ketebalan garis bawah
+                      ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12.0),
+                        padding: const EdgeInsets.symmetric(vertical: 6.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -137,8 +148,12 @@ class EditBalitaView extends GetView<EditBalitaController> {
                           ],
                         ),
                       ),
+                      Divider(
+                        color: Colors.grey, // Warna garis bawah
+                        thickness: 0.7, // Ketebalan garis bawah
+                      ),
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
+                        padding: const EdgeInsets.only(bottom: 8.0, top: 4),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -157,10 +172,14 @@ class EditBalitaView extends GetView<EditBalitaController> {
                           ],
                         ),
                       ),
+                      SizedBox(
+                        height: 8,
+                      ),
                     ],
                   ),
                 ),
-                // card  detakjantung dan tekanan darah
+                SizedBox(height: 16),
+                // card detak, tekanan darah
                 Card(
                   elevation: 4,
                   clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -176,16 +195,6 @@ class EditBalitaView extends GetView<EditBalitaController> {
                             style: TextStyle(
                                 fontWeight: FontWeight.w500, fontSize: 16),
                           ),
-                          Text(
-                            "Sistolik",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 16),
-                          ),
-                          Text(
-                            "Diastolik",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 16),
-                          ),
                         ],
                       ),
                       Row(
@@ -193,7 +202,7 @@ class EditBalitaView extends GetView<EditBalitaController> {
                         children: [
                           // detak jantung
                           Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            padding: const EdgeInsets.symmetric(vertical: 6.0),
                             child: Obx(
                               () => Text(
                                 '${controller.controllerDetakJantung.detakBayi.value} bpm',
@@ -204,36 +213,66 @@ class EditBalitaView extends GetView<EditBalitaController> {
                               ),
                             ),
                           ),
-                          // sistolik
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: Obx(
+                        ],
+                      ),
+                      Divider(
+                        color: Colors.grey, // Warna garis bawah
+                        thickness: 0.7, // Ketebalan garis bawah
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              "Sistolik",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 16),
+                            ),
+                            Text(
+                              "Diastolik",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Divider(
+                        color: Colors.grey, // Warna garis bawah
+                        thickness: 0.7, // Ketebalan garis bawah
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Obx(
                               () => Text(
-                                '${controller.controllerDetakJantung.sistolikBayi.value} sia',
+                                '${controller.controllerDetakJantung.sistolikBayi.value} sys',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 20,
+                                    fontSize: 24,
                                     color: Colors.brown.shade900),
                               ),
                             ),
-                          ),
-                          // diastolik
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: Obx(
+                            Obx(
                               () => Text(
                                 '${controller.controllerDetakJantung.diastolikBayi.value} dia',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 20,
+                                    fontSize: 24,
                                     color: Colors.brown.shade900),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
+                      ),
+                      Divider(
+                        color: Colors.grey, // Warna garis bawah
+                        thickness: 0.7, // Ketebalan garis bawah
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 12.0, top: 8),
+                        padding: const EdgeInsets.only(bottom: 8.0, top: 4),
                         child: ElevatedButton(
                             onPressed: () {
                               Get.toNamed(
@@ -241,12 +280,18 @@ class EditBalitaView extends GetView<EditBalitaController> {
                             },
                             child: Icon(Icons.add)),
                       ),
+                      SizedBox(
+                        height: 8,
+                      ),
                     ],
                   ),
                 ),
                 SizedBox(height: 48),
                 // button submit
                 ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(50), // NEW
+                    ),
                     onPressed: () {
                       // get zscore and classification
                       // detak jantung, panjangm berat

@@ -102,6 +102,8 @@ class AddBalitaView extends GetView<AddBalitaController> {
 
               SizedBox(height: 24),
               TextFormField(
+                keyboardType: TextInputType.name,
+                textInputAction: TextInputAction.next,
                 controller: controller.namaC,
                 autocorrect: false,
                 decoration: InputDecoration(
@@ -111,6 +113,7 @@ class AddBalitaView extends GetView<AddBalitaController> {
               ),
               SizedBox(height: 24),
               TextFormField(
+                  textInputAction: TextInputAction.next,
                   controller: controller.usiaC,
                   readOnly: true,
                   onTap: () => controller.selectDate(context),
@@ -122,6 +125,8 @@ class AddBalitaView extends GetView<AddBalitaController> {
               SizedBox(height: 24),
               // nama ibu
               TextFormField(
+                keyboardType: TextInputType.name,
+                textInputAction: TextInputAction.next,
                 controller: controller.namaIbuC,
                 autocorrect: false,
                 decoration: InputDecoration(
@@ -132,6 +137,8 @@ class AddBalitaView extends GetView<AddBalitaController> {
               SizedBox(height: 24),
               // alamat
               TextFormField(
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
                 controller: controller.alamat,
                 autocorrect: false,
                 decoration: InputDecoration(
@@ -181,8 +188,12 @@ class AddBalitaView extends GetView<AddBalitaController> {
                         ],
                       ),
                     ),
+                    Divider(
+                      color: Colors.grey, // Warna garis bawah
+                      thickness: 0.7, // Ketebalan garis bawah
+                    ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      padding: const EdgeInsets.symmetric(vertical: 6.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -207,8 +218,12 @@ class AddBalitaView extends GetView<AddBalitaController> {
                         ],
                       ),
                     ),
+                    Divider(
+                      color: Colors.grey, // Warna garis bawah
+                      thickness: 0.7, // Ketebalan garis bawah
+                    ),
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
+                      padding: const EdgeInsets.only(bottom: 8.0, top: 4),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -227,10 +242,14 @@ class AddBalitaView extends GetView<AddBalitaController> {
                         ],
                       ),
                     ),
+                    SizedBox(
+                      height: 8,
+                    ),
                   ],
                 ),
               ),
               SizedBox(height: 16),
+              // card detak, tekanan darah
               Card(
                 elevation: 4,
                 clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -246,16 +265,6 @@ class AddBalitaView extends GetView<AddBalitaController> {
                           style: TextStyle(
                               fontWeight: FontWeight.w500, fontSize: 16),
                         ),
-                        Text(
-                          "Sistolik",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500, fontSize: 16),
-                        ),
-                        Text(
-                          "Diastolik",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500, fontSize: 16),
-                        ),
                       ],
                     ),
                     Row(
@@ -263,7 +272,7 @@ class AddBalitaView extends GetView<AddBalitaController> {
                       children: [
                         // detak jantung
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          padding: const EdgeInsets.symmetric(vertical: 6.0),
                           child: Obx(
                             () => Text(
                               '${controller.controllerDetakJantung.detakBayi.value} bpm',
@@ -274,41 +283,74 @@ class AddBalitaView extends GetView<AddBalitaController> {
                             ),
                           ),
                         ),
-                        // sistolik
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Obx(
+                      ],
+                    ),
+                    Divider(
+                      color: Colors.grey, // Warna garis bawah
+                      thickness: 0.7, // Ketebalan garis bawah
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            "Sistolik",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 16),
+                          ),
+                          Text(
+                            "Diastolik",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.grey, // Warna garis bawah
+                      thickness: 0.7, // Ketebalan garis bawah
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Obx(
                             () => Text(
-                              '${controller.controllerDetakJantung.sistolikBayi.value} sia',
+                              '${controller.controllerDetakJantung.sistolikBayi.value} sys',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 20,
+                                  fontSize: 24,
                                   color: Colors.brown.shade900),
                             ),
                           ),
-                        ),
-                        // diastolik
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Obx(
+                          Obx(
                             () => Text(
                               '${controller.controllerDetakJantung.diastolikBayi.value} dia',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 20,
+                                  fontSize: 24,
                                   color: Colors.brown.shade900),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.grey, // Warna garis bawah
+                      thickness: 0.7, // Ketebalan garis bawah
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 12.0, top: 8),
+                      padding: const EdgeInsets.only(bottom: 8.0, top: 4),
                       child: ElevatedButton(
                           onPressed: () {
                             Get.toNamed(Routes.DETAIL_PENGUKURAN_DETAK_JANTUNG);
                           },
                           child: Icon(Icons.add)),
+                    ),
+                    SizedBox(
+                      height: 8,
                     ),
                   ],
                 ),
@@ -364,7 +406,7 @@ class AddBalitaView extends GetView<AddBalitaController> {
                     };
                     print(dataPostBalita);
                     await controller.postBalita(dataPostBalita);
-                    Get.offNamed(Routes.HOME);
+                    Get.offAllNamed(Routes.HOME);
                     controller.showMySnackbar(
                         context, "Data telah berhasil dibuat");
                   },
