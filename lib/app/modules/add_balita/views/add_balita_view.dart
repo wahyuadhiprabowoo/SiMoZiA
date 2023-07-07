@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:ta/app/api/api_services.dart';
 import 'package:ta/app/models/posyandu.dart';
 
@@ -33,7 +34,7 @@ class AddBalitaView extends GetView<AddBalitaController> {
                 showClearButton: true,
                 label: "Puskesmas",
                 hint: "Pilih Puskesmas",
-
+                showSearchBox: true,
                 onFind: onFindMethodPuskesmas,
                 popupItemBuilder: (context, item, isSelected) => Container(
                   child: Padding(
@@ -42,6 +43,13 @@ class AddBalitaView extends GetView<AddBalitaController> {
                     child: Text("${item.namaPuskesmas}"),
                   ),
                 ),
+                emptyBuilder: (context, searchEntry) => Center(
+                    child: Container(
+                  height: 200,
+                  width: 200,
+                  child: Lottie.asset('assets/lotties/not-found.json',
+                      fit: BoxFit.contain),
+                )),
                 itemAsString: (item) => item.namaPuskesmas,
                 onChanged: (puskesmas) {
                   try {
@@ -77,8 +85,13 @@ class AddBalitaView extends GetView<AddBalitaController> {
                     ),
                   ),
                   onFind: onFindMethodPosyandu,
-                  emptyBuilder: (context, searchEntry) =>
-                      Text("data tidak ditemukan"),
+                  emptyBuilder: (context, searchEntry) => Center(
+                      child: Container(
+                    height: 200,
+                    width: 200,
+                    child: Lottie.asset('assets/lotties/not-found.json',
+                        fit: BoxFit.contain),
+                  )),
                   itemAsString: (item) => item.namaPosyandu,
                   onChanged: (posyandu) {
                     try {

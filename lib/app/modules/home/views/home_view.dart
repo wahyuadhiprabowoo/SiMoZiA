@@ -50,6 +50,7 @@ class HomeView extends GetView<HomeController> {
                   child: Lottie.asset('assets/lotties/not-found.json',
                       fit: BoxFit.contain),
                 )),
+
                 itemAsString: (item) => item.namaPuskesmas,
                 onChanged: (puskesmas) {
                   try {
@@ -179,11 +180,31 @@ class HomeView extends GetView<HomeController> {
                           elevation: 4,
                           child: Column(
                             children: [
-                              SizedBox(
-                                height: 12,
+                              // delete balita
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: IconButton(
+                                  onPressed: () => Get.dialog(AlertDialog(
+                                    title: Text('Peringatan'),
+                                    content: Text(
+                                        'Hapus data balita ${balita.namaAnak}'),
+                                    actions: [
+                                      OutlinedButton(
+                                          onPressed: () => Get.back(),
+                                          child: Text("Tidak")),
+                                      ElevatedButton(
+                                          onPressed: () async {
+                                            controller.deleteBalita(balita.id);
+                                          },
+                                          child: Text("Ya")),
+                                    ],
+                                  )),
+                                  icon: Icon(Icons.delete_outline_sharp),
+                                  color: Color(AppColors.secondary),
+                                ),
                               ),
-                              Text(
-                                  "Nama: ${balita.namaAnak} || Usia: ${balita.umur} Bulan"),
+
+                              Text("Nama: ${balita.namaAnak}"),
                               Divider(
                                 color: Colors.grey, // Warna garis bawah
                                 thickness: 0.7, // Ketebalan garis bawah
@@ -209,7 +230,9 @@ class HomeView extends GetView<HomeController> {
                                   ),
                                   Expanded(
                                       flex: 2,
-                                      child: Text("Panjang/Tinggi Badan: ")),
+                                      child: Text(balita.umur < 12
+                                          ? "Panjang Badan"
+                                          : "Tinggi Badan: ")),
                                   Expanded(
                                       flex: 1,
                                       child: Text(

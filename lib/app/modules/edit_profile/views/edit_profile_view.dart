@@ -53,13 +53,13 @@ class EditProfileView extends GetView<EditProfileController> {
                   ),
                   // Profile
                   Padding(
-                    padding: const EdgeInsets.only(top: 108.0),
+                    padding: const EdgeInsets.only(top: 65.0),
                     child: Center(
                       child: Container(
-                        height: 170,
-                        width: 170,
+                        height: 250,
+                        width: 250,
                         child: Image.asset(
-                          'assets/img/profile.png',
+                          'assets/img/logo.png',
                           fit: BoxFit.cover,
                         ),
                       ),
