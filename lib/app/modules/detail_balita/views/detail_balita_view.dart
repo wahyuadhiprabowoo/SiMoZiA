@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:ta/app/konstanta/colors.dart';
+import 'package:ta/utils/main.dart';
 
 import '../../../routes/app_pages.dart';
 import '../controllers/detail_balita_controller.dart';
@@ -12,54 +13,60 @@ class DetailBalitaView extends GetView<DetailBalitaController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(AppColors.secondary),
-        appBar: AppBar(
-          title: Text('DetailBalitaView'),
-          centerTitle: true,
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Column(
-              children: [
-                SizedBox(height: 48),
-                LabelData(label: "Nama: ${balita.namaAnak}"),
-                SizedBox(height: 24),
-                LabelData(label: "Usia: ${balita.umur}"),
-                SizedBox(height: 24),
-                LabelData(label: "Nama Ibu"),
-                SizedBox(height: 24),
-                LabelData(label: "jenis Kelamin"),
-                SizedBox(height: 24),
-                LabelDataPengukuranBeratDanPanjang(
-                    labelPengukuran: "Tinggi Badan",
-                    labelZscore: "zscore",
-                    labelKlasifikasi: "Klasifikasi"),
-                SizedBox(height: 24),
-                LabelDataPengukuranBeratDanPanjang(
-                    labelPengukuran: "Berat Badan",
-                    labelZscore: "zscore",
-                    labelKlasifikasi: "Klasifikasi"),
-                SizedBox(height: 24),
-                LabelDataDetakJantung(
-                  label: "Detak Jantung",
-                  klasifikasi: "Klasifikasi",
+      backgroundColor: Color(AppColors.secondary),
+      appBar: AppBar(
+        title: Text('DetailBalitaView'),
+        centerTitle: true,
+      ),
+      body: Obx(
+        () => controller.isLoading.value
+            ? LoadingScreen(color: Colors.white, size: 50)
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 48),
+                      LabelData(label: "Nama: ${balita.namaAnak}"),
+                      SizedBox(height: 24),
+                      LabelData(label: "Usia: ${balita.umur}"),
+                      SizedBox(height: 24),
+                      LabelData(label: "Nama Ibu"),
+                      SizedBox(height: 24),
+                      LabelData(label: "jenis Kelamin"),
+                      SizedBox(height: 24),
+                      LabelDataPengukuranBeratDanPanjang(
+                          labelPengukuran: "Tinggi Badan",
+                          labelZscore: "zscore",
+                          labelKlasifikasi: "Klasifikasi"),
+                      SizedBox(height: 24),
+                      LabelDataPengukuranBeratDanPanjang(
+                          labelPengukuran: "Berat Badan",
+                          labelZscore: "zscore",
+                          labelKlasifikasi: "Klasifikasi"),
+                      SizedBox(height: 24),
+                      LabelDataDetakJantung(
+                        label: "Detak Jantung",
+                        klasifikasi: "Klasifikasi",
+                      ),
+                      SizedBox(height: 48),
+                      Container(
+                        height: 47,
+                        width: double.infinity,
+                        child: ElevatedButton(
+                            onPressed: () {
+                              Get.toNamed(Routes.EDIT_BALITA,
+                                  arguments: balita);
+                            },
+                            child: Text("Edit Data")),
+                      ),
+                      SizedBox(height: 24),
+                    ],
+                  ),
                 ),
-                SizedBox(height: 48),
-                Container(
-                  height: 47,
-                  width: double.infinity,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        Get.toNamed(Routes.EDIT_BALITA, arguments: balita);
-                      },
-                      child: Text("Edit Data")),
-                ),
-                SizedBox(height: 24),
-              ],
-            ),
-          ),
-        ));
+              ),
+      ),
+    );
   }
 }
 

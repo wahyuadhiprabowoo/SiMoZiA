@@ -122,12 +122,13 @@ class AddBalitaController extends GetxController {
   //  post to api
   Future<void> postBalita(Map<String, dynamic> dataBalita) async {
     String token = await ApiService.token();
-    var berat_badan = double.tryParse(controllerBeratBayi.beratBayi.value);
-    print(berat_badan);
+    // var berat_badan = double.tryParse(controllerBeratBayi.beratBayi.value);
+    // print(berat_badan);
     String url =
         '${ApiEndPoint.baseUrl}puskesmas/${puskesmasId.value}/posyandu/${posyanduId.value}/balita';
     print(url);
     try {
+      ApiService.isLoading.value = true;
       var response = await http.post(
         Uri.parse(url),
         headers: {
@@ -137,6 +138,7 @@ class AddBalitaController extends GetxController {
         body: jsonEncode(dataBalita),
       );
       // try and catch
+      await Future.delayed(Duration(seconds: 2));
       print("ini respon server ketika post data ${response.statusCode}");
       if (response.statusCode == 201) {
         // do something
@@ -145,7 +147,19 @@ class AddBalitaController extends GetxController {
         print(json);
       }
     } catch (e) {
-      print(e);
+      Get.dialog(AlertDialog(
+        title: Text('Peringatan'),
+        content: Text('Terjadi kesalahan $e'),
+        actions: [
+          ElevatedButton(
+              onPressed: () async {
+                Get.back();
+              },
+              child: Text("Ya"))
+        ],
+      ));
+    } finally {
+      ApiService.isLoading.value = false;
     }
   }
 

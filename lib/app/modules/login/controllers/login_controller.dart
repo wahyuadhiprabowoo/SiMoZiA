@@ -6,6 +6,7 @@ class LoginController extends GetxController {
   TextEditingController emailC = TextEditingController();
   TextEditingController passC = TextEditingController();
   var isHidden = true.obs;
+  var isLoading = false.obs;
   @override
   void onInit() async {
     super.onInit();

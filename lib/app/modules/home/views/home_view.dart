@@ -10,6 +10,7 @@ import 'package:ta/app/konstanta/colors.dart';
 import 'package:http/http.dart' as http;
 import 'package:ta/app/models/posyandu.dart';
 import 'package:ta/app/models/puskesmas.dart';
+import 'package:ta/utils/main.dart';
 
 import '../../../api/api_services.dart';
 import '../../../routes/app_pages.dart';
@@ -173,106 +174,144 @@ class HomeView extends GetView<HomeController> {
                     itemCount: balitas.length,
                     itemBuilder: (context, index) {
                       final balita = balitas[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 24.0, vertical: 4),
-                        child: Card(
-                          elevation: 4,
-                          child: Column(
-                            children: [
-                              // delete balita
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: IconButton(
-                                  onPressed: () => Get.dialog(AlertDialog(
-                                    title: Text('Peringatan'),
-                                    content: Text(
-                                        'Hapus data balita ${balita.namaAnak}'),
-                                    actions: [
-                                      OutlinedButton(
-                                          onPressed: () => Get.back(),
-                                          child: Text("Tidak")),
-                                      ElevatedButton(
-                                          onPressed: () async {
-                                            controller.deleteBalita(balita.id);
-                                          },
-                                          child: Text("Ya")),
+                      return Obx(
+                        () => ApiService.isLoading.value
+                            ? Padding(
+                                padding: const EdgeInsets.all(44.0),
+                                child: LoadingScreen(
+                                    color: Colors.brown, size: 25),
+                              )
+                            : Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 24.0, vertical: 4),
+                                child: Card(
+                                  elevation: 4,
+                                  child: Column(
+                                    children: [
+                                      // delete balita
+                                      Align(
+                                        alignment: Alignment.topRight,
+                                        child: IconButton(
+                                          onPressed: () =>
+                                              Get.dialog(AlertDialog(
+                                            title: Text('Peringatan'),
+                                            content: Text(
+                                                'Hapus data balita ${balita.namaAnak}'),
+                                            actions: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  OutlinedButton(
+                                                      onPressed: () =>
+                                                          Get.back(),
+                                                      child: Text("Tidak")),
+                                                  SizedBox(
+                                                    width: 12,
+                                                  ),
+                                                  Obx(
+                                                    () => controller
+                                                            .isLoading.value
+                                                        ? LoadingScreen(
+                                                            color: Colors.brown,
+                                                            size: 25,
+                                                          )
+                                                        : ElevatedButton(
+                                                            onPressed:
+                                                                () async {
+                                                              controller
+                                                                  .deleteBalita(
+                                                                      balita
+                                                                          .id);
+                                                            },
+                                                            child: Text("Ya")),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          )),
+                                          icon:
+                                              Icon(Icons.delete_outline_sharp),
+                                          color: Color(AppColors.secondary),
+                                        ),
+                                      ),
+// nama
+                                      Text("Nama: ${balita.namaAnak}"),
+                                      Divider(
+                                        color: Colors.grey, // Warna garis bawah
+                                        thickness: 0.7, // Ketebalan garis bawah
+                                      ),
+                                      //  pengukuran
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 12,
+                                          ),
+                                          Expanded(
+                                              flex: 2,
+                                              child: Text("Pengukuran ")),
+                                          Expanded(
+                                              flex: 1,
+                                              child: Text("Klasifikasi")),
+                                        ],
+                                      ),
+                                      Divider(
+                                        color: Colors.grey, // Warna garis bawah
+                                        thickness: 0.7, // Ketebalan garis bawah
+                                      ),
+                                      // panjang
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 12,
+                                          ),
+                                          Expanded(
+                                              flex: 2,
+                                              child: Text(balita.umur < 12
+                                                  ? "Panjang Badan"
+                                                  : "Tinggi Badan: ")),
+                                          Expanded(
+                                              flex: 1,
+                                              child: Text(
+                                                  "${balita.klasifikasiPanjangBadan}")),
+                                        ],
+                                      ),
+                                      Divider(
+                                        color: Colors.grey, // Warna garis bawah
+                                        thickness: 0.7, // Ketebalan garis bawah
+                                      ),
+                                      // berat
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 12,
+                                          ),
+                                          Expanded(
+                                              flex: 2,
+                                              child: Text("Berat Badan: ")),
+                                          Expanded(
+                                              flex: 1,
+                                              child: Text(
+                                                  "${balita.klasifikasiBeratBadan}")),
+                                        ],
+                                      ),
+
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 4, right: 8.0),
+                                        child: Align(
+                                            alignment: Alignment.topRight,
+                                            child: OutlinedButton(
+                                              onPressed: () => Get.toNamed(
+                                                  Routes.DETAIL_BALITA,
+                                                  arguments: balita),
+                                              child: Text("Detail"),
+                                            )),
+                                      ),
                                     ],
-                                  )),
-                                  icon: Icon(Icons.delete_outline_sharp),
-                                  color: Color(AppColors.secondary),
+                                  ),
                                 ),
                               ),
-
-                              Text("Nama: ${balita.namaAnak}"),
-                              Divider(
-                                color: Colors.grey, // Warna garis bawah
-                                thickness: 0.7, // Ketebalan garis bawah
-                              ),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: 12,
-                                  ),
-                                  Expanded(flex: 2, child: Text("Pengukuran ")),
-                                  Expanded(flex: 1, child: Text("Klasifikasi")),
-                                ],
-                              ),
-                              Divider(
-                                color: Colors.grey, // Warna garis bawah
-                                thickness: 0.7, // Ketebalan garis bawah
-                              ),
-                              // panjang
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: 12,
-                                  ),
-                                  Expanded(
-                                      flex: 2,
-                                      child: Text(balita.umur < 12
-                                          ? "Panjang Badan"
-                                          : "Tinggi Badan: ")),
-                                  Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                          "${balita.klasifikasiPanjangBadan}")),
-                                ],
-                              ),
-                              Divider(
-                                color: Colors.grey, // Warna garis bawah
-                                thickness: 0.7, // Ketebalan garis bawah
-                              ),
-                              // berat
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: 12,
-                                  ),
-                                  Expanded(
-                                      flex: 2, child: Text("Berat Badan: ")),
-                                  Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                          "${balita.klasifikasiBeratBadan}")),
-                                ],
-                              ),
-
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 4, right: 8.0),
-                                child: Align(
-                                    alignment: Alignment.topRight,
-                                    child: OutlinedButton(
-                                      onPressed: () => Get.toNamed(
-                                          Routes.DETAIL_BALITA,
-                                          arguments: balita),
-                                      child: Text("Detail"),
-                                    )),
-                              ),
-                            ],
-                          ),
-                        ),
                       );
                     },
                   ),

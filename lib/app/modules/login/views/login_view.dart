@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:ta/app/api/api_services.dart';
 import 'package:ta/app/konstanta/colors.dart';
 import 'package:ta/app/routes/app_pages.dart';
+import 'package:ta/utils/main.dart';
 
 import '../controllers/login_controller.dart';
 
@@ -178,18 +179,25 @@ class LoginView extends GetView<LoginController> {
                 top: 24,
               ),
               child: Container(
-                width: double.infinity,
-                height: 47,
-                child: ElevatedButton(
-                    child: Text("Masuk"),
-                    onPressed: () async {
-                      var body = {
-                        "email": controller.emailC.text.trim(),
-                        "password": controller.passC.text.trim()
-                      };
-                      await ApiService.login(body);
-                    }),
-              ),
+                  width: double.infinity,
+                  height: 47,
+                  child: Obx(
+                    () {
+                      return ApiService.isLoading.value
+                          ? LoadingScreen(
+                              color: Colors.white,
+                            )
+                          : ElevatedButton(
+                              child: Text("Masuk"),
+                              onPressed: () async {
+                                var body = {
+                                  "email": controller.emailC.text.trim(),
+                                  "password": controller.passC.text.trim()
+                                };
+                                await ApiService.login(body);
+                              });
+                    },
+                  )),
             ),
             Padding(
               padding: EdgeInsets.only(left: 24, right: 24, bottom: 24),

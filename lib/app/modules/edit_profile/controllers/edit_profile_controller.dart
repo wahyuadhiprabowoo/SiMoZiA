@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ta/app/api/api_services.dart';
 import 'package:ta/app/models/user.dart';
+import 'package:ta/utils/main.dart';
 
 import '../../../routes/app_pages.dart';
 import 'package:http/http.dart' as http;
@@ -12,11 +13,13 @@ class EditProfileController extends GetxController {
 // variabel
   var nameUser = "".obs;
   var emailUser = "".obs;
+  var isLoading = false.obs;
 // get user information
 // get user
   Future user() async {
     String token = await ApiService.getToken();
     try {
+      isLoading.value = true;
       var response = await http.get(
         Uri.parse(ApiEndPoint.baseUrl + ApiEndPoint.authEndPoint.user),
         headers: {
@@ -25,6 +28,7 @@ class EditProfileController extends GetxController {
         },
       );
       // try and catch
+      await Future.delayed(Duration(seconds: 1));
       print("ini respon server ${response.statusCode}");
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
@@ -32,8 +36,6 @@ class EditProfileController extends GetxController {
         User user = User.fromJson(responseData);
         nameUser.value = user.name;
         emailUser.value = user.email;
-        print(nameUser.value);
-        print(emailUser.value);
       }
     } catch (e) {
       Get.defaultDialog(
@@ -44,6 +46,8 @@ class EditProfileController extends GetxController {
           child: Text('OK'),
         ),
       );
+    } finally {
+      isLoading.value = false;
     }
   }
 
@@ -51,23 +55,39 @@ class EditProfileController extends GetxController {
   void showAlertLogout() {
     Get.dialog(
       AlertDialog(
-        title: Text('Alert'),
+        title: Text('Peringatan'),
         content: Text('Apakah anda ingin keluar?'),
         actions: [
-          OutlinedButton(
-            onPressed: () {
-              Get.back();
-            },
-            child: Text(
-              'Tidak',
-            ),
-          ),
-          ElevatedButton(
-              onPressed: () async {
-                await ApiService.clearToken();
-                Get.offAllNamed(Routes.LOGIN);
-              },
-              child: Text("Ya"))
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              OutlinedButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: Text(
+                  'Tidak',
+                ),
+              ),
+              SizedBox(
+                width: 12,
+              ),
+              Obx(() => ApiService.isLoading.value
+                  ? LoadingScreen(
+                      color: Colors.brown,
+                      size: 25,
+                    )
+                  : ElevatedButton(
+                      onPressed: () async {
+                        ApiService.isLoading.value = true;
+                        await Future.delayed(Duration(seconds: 2));
+                        await ApiService.clearToken();
+                        ApiService.isLoading.value = false;
+                        Get.offAllNamed(Routes.LOGIN);
+                      },
+                      child: Text("Ya"))),
+            ],
+          )
         ],
       ),
     );

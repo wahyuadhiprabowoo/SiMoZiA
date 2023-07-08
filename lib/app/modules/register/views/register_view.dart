@@ -152,18 +152,22 @@ class RegisterView extends GetView<RegisterController> {
             Container(
               width: double.infinity,
               height: 47,
-              child: ElevatedButton(
-                  onPressed: () async {
-                    var register = {
-                      'name': controller.nameC.text.trim(),
-                      'email': controller.emailC.text.trim(),
-                      'password': controller.passC.text.trim(),
-                      'password_confirmation':
-                          controller.passConfirmationC.text.trim()
-                    };
-                    await ApiService.register(register);
-                  },
-                  child: Text("Buat akun")),
+              child: Obx(
+                () => ApiService.isLoading.value
+                    ? LoadingScreen(color: Colors.white)
+                    : ElevatedButton(
+                        onPressed: () async {
+                          var register = {
+                            'name': controller.nameC.text.trim(),
+                            'email': controller.emailC.text.trim(),
+                            'password': controller.passC.text.trim(),
+                            'password_confirmation':
+                                controller.passConfirmationC.text.trim()
+                          };
+                          await ApiService.register(register);
+                        },
+                        child: Text("Buat akun")),
+              ),
             ),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Text(

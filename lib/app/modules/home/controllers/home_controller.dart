@@ -17,6 +17,7 @@ class HomeController extends GetxController {
   var foundBalita = false.obs;
   var foundPosyandu = false.obs;
   var foundPuskesmas = false.obs;
+  var isLoading = false.obs;
   var namaPuskesmas = "".obs;
   var namaPosyandu = "".obs;
   RxList<Balita>? balitas = RxList<Balita>([]);
@@ -27,6 +28,7 @@ class HomeController extends GetxController {
     urlBalita.value =
         "${ApiEndPoint.baseUrl}puskesmas/${puskesmasId.value}/posyandu/${posyanduId.value}/balita/";
     try {
+      ApiService.isLoading.value = true;
       Uri url = Uri.parse(urlBalita.value);
       final response = await http.get(
         url,
@@ -35,6 +37,7 @@ class HomeController extends GetxController {
           'Authorization': 'Bearer $token'
         },
       );
+      await Future.delayed(Duration(seconds: 2));
       // masuk ke api -> data
       List data = (jsonDecode(response.body) as Map<String, dynamic>)["data"];
       // print(data);
@@ -53,7 +56,19 @@ class HomeController extends GetxController {
       }
     } catch (e) {
       foundBalita.value = false;
-      print(e);
+      Get.dialog(AlertDialog(
+        title: Text('Peringatan'),
+        content: Text('Tidak ada data untuk ditampilkan'),
+        actions: [
+          ElevatedButton(
+              onPressed: () async {
+                Get.back();
+              },
+              child: Text("Ya"))
+        ],
+      ));
+    } finally {
+      ApiService.isLoading.value = false;
     }
     print("found balita ${foundBalita.value}");
   }
@@ -66,6 +81,7 @@ class HomeController extends GetxController {
     print(url);
 
     try {
+      isLoading.value = true;
       final response = await http.delete(
         Uri.parse(url),
         headers: {
@@ -73,12 +89,14 @@ class HomeController extends GetxController {
           'Authorization': 'Bearer $token'
         },
       );
+      await Future.delayed(Duration(seconds: 2));
       if (response.statusCode == 200) {
         // Hapus data balita berhasil
         List<Balita> updatedBalitas =
             balitas!.where((balita) => balita.id != balitaId).toList();
         balitas!.assignAll(updatedBalitas);
         print('Data balita berhasil dihapus');
+        Get.back();
       } else {
         // Gagal menghapus data balita
         print(
@@ -87,6 +105,8 @@ class HomeController extends GetxController {
     } catch (e) {
       // Terjadi kesalahan dalam mengirim permintaan HTTP
       print('Terjadi kesalahan dalam menghapus data balita: $e');
+    } finally {
+      isLoading.value = false;
     }
   }
 

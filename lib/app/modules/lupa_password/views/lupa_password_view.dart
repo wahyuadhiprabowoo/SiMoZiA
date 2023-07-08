@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:ta/app/routes/app_pages.dart';
+import 'package:ta/utils/main.dart';
 
 import '../../../api/api_services.dart';
 import '../../../konstanta/colors.dart';
@@ -127,12 +128,16 @@ class LupaPasswordView extends GetView<LupaPasswordController> {
                         Container(
                           width: double.infinity,
                           height: 47,
-                          child: ElevatedButton(
-                              child: Text("Kirim"),
-                              onPressed: () async {
-                                await ApiService.forgotPassword(
-                                    controller.emailC.text);
-                              }),
+                          child: Obx(
+                            () => ApiService.isLoading.value
+                                ? LoadingScreen(color: Colors.brown)
+                                : ElevatedButton(
+                                    child: Text("Kirim"),
+                                    onPressed: () async {
+                                      await ApiService.forgotPassword(
+                                          controller.emailC.text);
+                                    }),
+                          ),
                         ),
                       ],
                     ),

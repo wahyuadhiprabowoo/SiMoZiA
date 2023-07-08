@@ -26,6 +26,9 @@ class ApiService {
     return token;
   }
 
+  //isloading variabel
+  static var isLoading = false.obs;
+
 // get token
   static Future<String> getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -47,6 +50,8 @@ class ApiService {
   // login api
   static Future<void> login(Map<String, dynamic> body) async {
     try {
+      isLoading.value = true;
+      print("ini nilai is loading ${isLoading.value}");
       var response = await http.post(
         Uri.parse(ApiEndPoint.baseUrl + ApiEndPoint.authEndPoint.loginEmail),
         headers: {'Content-Type': 'application/json'},
@@ -58,8 +63,8 @@ class ApiService {
         String token = responseData[
             'token']; // Ganti dengan properti token yang diberikan oleh API Anda
         await setToken(token);
-        print(token);
-        print(responseData);
+
+        await Future.delayed(Duration(seconds: 3));
         Get.offAllNamed(Routes.HOME);
       }
       if (response.statusCode == 401) {
@@ -90,12 +95,17 @@ class ApiService {
               child: Text("Ya"))
         ],
       ));
+    } finally {
+      isLoading.value = false;
+      print("ini nilai is loading setelah sukses ${isLoading.value}");
     }
   }
 
   // register api
   static Future<void> register(Map<String, dynamic> register) async {
     try {
+      isLoading.value = true;
+
       var response = await http.post(
         Uri.parse(ApiEndPoint.baseUrl + ApiEndPoint.authEndPoint.registerEmail),
         headers: {'Content-Type': 'application/json'},
@@ -103,19 +113,7 @@ class ApiService {
       );
       // try and catch
       print("ini respon server ${response.statusCode}");
-      if (response.statusCode == 400) {
-        Get.dialog(AlertDialog(
-          title: Text('Peringatan'),
-          content: Text('Terjadi kesalahan, periksa data diri!'),
-          actions: [
-            ElevatedButton(
-                onPressed: () async {
-                  Get.back();
-                },
-                child: Text("Ya"))
-          ],
-        ));
-      }
+      await Future.delayed(Duration(seconds: 3));
       if (response.statusCode == 201) {
         var responseData = jsonDecode(response.body);
         String name = responseData["user"]["name"];
@@ -132,6 +130,20 @@ class ApiService {
         ));
         Get.offNamed(Routes.LOGIN);
       }
+      // iff error
+      if (response.statusCode == 400) {
+        Get.dialog(AlertDialog(
+          title: Text('Peringatan'),
+          content: Text('Terjadi kesalahan, periksa data diri!'),
+          actions: [
+            ElevatedButton(
+                onPressed: () async {
+                  Get.back();
+                },
+                child: Text("Ya"))
+          ],
+        ));
+      }
     } catch (e) {
       Get.dialog(AlertDialog(
         title: Text('Peringatan'),
@@ -144,18 +156,26 @@ class ApiService {
               child: Text("Ya"))
         ],
       ));
+    } finally {
+      isLoading.value = false;
+      print("ini nilai is loading setelah sukses ${isLoading.value}");
     }
   }
 
   // forget password api
   static Future<void> forgotPassword(String email) async {
     try {
+      isLoading.value = true;
+
       var response = await http.post(
         Uri.parse(
             ApiEndPoint.baseUrl + ApiEndPoint.authEndPoint.forgotPassword),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': email}),
       );
+      // delay
+      await Future.delayed(Duration(seconds: 3));
+
       // try and catch
       print("ini respon server ${response.statusCode}");
       if (response.statusCode == 200) {
@@ -200,12 +220,16 @@ class ApiService {
               child: Text("Ya"))
         ],
       ));
+    } finally {
+      isLoading.value = false;
+      print("ini nilai is loading setelah sukses ${isLoading.value}");
     }
   }
 
   //patch api user
   static Future<void> updateUser(Map<String, dynamic> userData) async {
     try {
+      isLoading.value = true;
       String token = await ApiService.token();
       var response = await http.patch(
         Uri.parse(ApiEndPoint.baseUrl + ApiEndPoint.authEndPoint.user),
@@ -216,6 +240,7 @@ class ApiService {
         body: jsonEncode(userData),
       );
       // try and catch
+      await Future.delayed(Duration(seconds: 3));
       print("ini respon server ${response.statusCode}");
       if (response.statusCode == 200) {
         // do something
@@ -234,6 +259,9 @@ class ApiService {
               child: Text("Ya"))
         ],
       ));
+    } finally {
+      isLoading.value = false;
+      print("ini nilai is loading setelah sukses ${isLoading.value}");
     }
   }
 }

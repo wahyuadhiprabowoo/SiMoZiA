@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:ta/utils/main.dart';
 
 import '../../../api/api_services.dart';
 import '../../../models/posyandu.dart';
@@ -288,60 +289,68 @@ class EditBalitaView extends GetView<EditBalitaController> {
                 ),
                 SizedBox(height: 48),
                 // button submit
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(50), // NEW
-                    ),
-                    onPressed: () {
-                      // get zscore and classification
-                      // detak jantung, panjangm berat
-                      controller.getDetakJantung();
-                      controller.getBeratBadan();
-                      controller.getPanjangBadan();
-                      controller.getDateTimeTanggalLahir();
-                      // menangani null check
-                      if (int.tryParse(controller
-                              .controllerDetakJantung.detakBayi.value) ==
-                          0) {
-                        controller.klasifikasi_detak_jantung.value = "-";
-                      } else {
-                        controller.klasifikasi_detak_jantung.value;
-                      }
-                      var userBalita = {
-                        "nama_anak": controller.namaC.text,
-                        "nama_ibu": controller.namaIbuC.text,
-                        "alamat": controller.alamatC.text,
-                        "jenis_kelamin": controller.jk.value,
-                        "umur": controller.usia.value,
-                        "tanggal_lahir": controller.tanggal_lahir,
-                        "berat_badan":
-                            controller.controllerBeratBayi.beratBayi.value,
-                        "panjang_badan":
-                            controller.controllerPanjangBayi.panjangBayi.value,
-                        "detak_jantung":
-                            controller.controllerDetakJantung.detakBayi.value,
-                        "zscore_berat_badan":
-                            controller.zscore_berat_badan.value.toString(),
-                        "zscore_panjang_badan":
-                            controller.zscore_panjang_badan.value.toString(),
-                        "klasifikasi_berat_badan":
-                            controller.klasifikasi_berat_badan.value,
-                        "klasifikasi_panjang_badan":
-                            controller.klasifikasi_panjang_badan.value,
-                        "klasifikasi_detak_jantung":
-                            controller.klasifikasi_detak_jantung.value,
-                        "sistolik": int.tryParse(controller
-                            .controllerDetakJantung.sistolikBayi.value),
-                        "diastolik": int.tryParse(controller
-                            .controllerDetakJantung.diastolikBayi.value),
-                      };
-                      print("data sebelum dikirim ke server");
-                      print(userBalita);
-                      controller.updateBalita(userBalita);
+                Obx(
+                  () => ApiService.isLoading.value
+                      ? LoadingScreen(color: Colors.brown, size: 25)
+                      : ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size.fromHeight(50), // NEW
+                          ),
+                          onPressed: () async {
+                            // get zscore and classification
+                            // detak jantung, panjangm berat
+                            controller.getDetakJantung();
+                            controller.getBeratBadan();
+                            controller.getPanjangBadan();
+                            controller.getDateTimeTanggalLahir();
+                            // menangani null check
+                            if (int.tryParse(controller
+                                    .controllerDetakJantung.detakBayi.value) ==
+                                0) {
+                              controller.klasifikasi_detak_jantung.value = "-";
+                            } else {
+                              controller.klasifikasi_detak_jantung.value;
+                            }
+                            var userBalita = {
+                              "nama_anak": controller.namaC.text,
+                              "nama_ibu": controller.namaIbuC.text,
+                              "alamat": controller.alamatC.text,
+                              "jenis_kelamin": controller.jk.value,
+                              "umur": controller.usia.value,
+                              "tanggal_lahir": controller.tanggal_lahir,
+                              "berat_badan": controller
+                                  .controllerBeratBayi.beratBayi.value,
+                              "panjang_badan": controller
+                                  .controllerPanjangBayi.panjangBayi.value,
+                              "detak_jantung": controller
+                                  .controllerDetakJantung.detakBayi.value,
+                              "zscore_berat_badan": controller
+                                  .zscore_berat_badan.value
+                                  .toString(),
+                              "zscore_panjang_badan": controller
+                                  .zscore_panjang_badan.value
+                                  .toString(),
+                              "klasifikasi_berat_badan":
+                                  controller.klasifikasi_berat_badan.value,
+                              "klasifikasi_panjang_badan":
+                                  controller.klasifikasi_panjang_badan.value,
+                              "klasifikasi_detak_jantung":
+                                  controller.klasifikasi_detak_jantung.value,
+                              "sistolik": int.tryParse(controller
+                                  .controllerDetakJantung.sistolikBayi.value),
+                              "diastolik": int.tryParse(controller
+                                  .controllerDetakJantung.diastolikBayi.value),
+                            };
+                            print("data sebelum dikirim ke server");
+                            print(userBalita);
 
-                      Get.offAllNamed(Routes.HOME);
-                    },
-                    child: Text("Update Data"))
+                            await controller.updateBalita(userBalita);
+                            Get.offAllNamed(Routes.HOME);
+                            Utils.showMySnackbar(
+                                context, "Data berhasil diubah");
+                          },
+                          child: Text("Update Data")),
+                )
               ],
             ),
           ),

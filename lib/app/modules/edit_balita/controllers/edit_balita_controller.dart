@@ -8,6 +8,7 @@ import 'package:ta/app/modules/detail_pengukuran_berat_badan/controllers/detail_
 import 'package:http/http.dart' as http;
 import '../../../api/api_services.dart';
 import '../../../models/balita.dart';
+import '../../../routes/app_pages.dart';
 import '../../detail_pengukuran_detak_jantung/controllers/detail_pengukuran_detak_jantung_controller.dart';
 import '../../detail_pengukuran_panjang_badan/controllers/detail_pengukuran_panjang_badan_controller.dart';
 import '../../home/controllers/home_controller.dart';
@@ -116,6 +117,7 @@ class EditBalitaController extends GetxController {
 // patch api balitia
   Future<void> updateBalita(Map<String, dynamic> userBalita) async {
     try {
+      ApiService.isLoading.value = true;
       String token = await ApiService.token();
       var response = await http.patch(
         Uri.parse("${url_balita.value}"),
@@ -126,6 +128,7 @@ class EditBalitaController extends GetxController {
         body: jsonEncode(userBalita),
       );
       // try and catch
+      await Future.delayed(Duration(seconds: 2));
       print("ini respon server ${response.statusCode}");
       if (response.statusCode == 200) {
         // do something
@@ -135,7 +138,19 @@ class EditBalitaController extends GetxController {
         print(json);
       }
     } catch (e) {
-      print(e);
+      Get.dialog(AlertDialog(
+        title: Text('Peringatan'),
+        content: Text('Terjadi kesalahan $e!'),
+        actions: [
+          ElevatedButton(
+              onPressed: () async {
+                Get.back();
+              },
+              child: Text("Ya"))
+        ],
+      ));
+    } finally {
+      ApiService.isLoading.value = false;
     }
   }
 
