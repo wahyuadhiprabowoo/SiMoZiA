@@ -1,9 +1,27 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-class DetailBalitaController extends GetxController {
-  //TODO: Implement DetailBalitaController
-  var isLoading = false.obs;
+import '../../../models/balita.dart';
 
+class DetailBalitaController extends GetxController {
+// dapatkan detail balita
+  Balita balita = Get.arguments;
+  var isLoading = false.obs;
+  TextEditingController namaC = TextEditingController();
+  TextEditingController usiaC = TextEditingController();
+  TextEditingController namaIbuC = TextEditingController();
+  TextEditingController jkC = TextEditingController();
+  // variabel
+  var panjangBadan = "".obs;
+  var beratBadan = "".obs;
+  var detakJantung = "".obs;
+  var sistolik = "".obs;
+  var diastolik = "".obs;
+  var zscorePanjang = "".obs;
+  var zscoreBerat = "".obs;
+  var klasifikasiPanjang = "".obs;
+  var klasifikasiBerat = "".obs;
+  var klasifikasiDetakJantung = "".obs;
   // loadingscreen
   void loadingScreen() async {
     isLoading.value = true;
@@ -16,6 +34,24 @@ class DetailBalitaController extends GetxController {
   void onInit() {
     super.onInit();
     loadingScreen();
+    // nilai awal
+    namaC.text = balita.namaAnak;
+    namaIbuC.text = balita.namaIbu;
+    usiaC.text = "${balita.umur} bulan";
+    jkC.text = balita.jenisKelamin;
+    // pengukuran
+    panjangBadan.value = "${balita.panjangBadan} cm";
+    beratBadan.value = "${balita.beratBadan} kg";
+    detakJantung.value = "${balita.detakJantung} bpm";
+    sistolik.value = "${balita.sistolik} sys";
+    diastolik.value = "${balita.diastolik} dia";
+    // zscore
+    zscoreBerat.value = "${balita.zscoreBeratBadan}";
+    zscorePanjang.value = "${balita.zscorePanjangBadan}";
+    // klasifikasi
+    klasifikasiPanjang.value = "${balita.klasifikasiPanjangBadan}";
+    klasifikasiBerat.value = "${balita.klasifikasiBeratBadan}";
+    klasifikasiDetakJantung.value = "${balita.klasifikasiDetakJantung}";
   }
 
   @override
