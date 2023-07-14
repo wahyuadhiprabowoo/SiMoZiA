@@ -6,9 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:ta/app/modules/add_balita/controllers/add_balita_controller.dart';
 import 'package:ta/app/modules/detail_pengukuran_berat_badan/controllers/detail_pengukuran_berat_badan_controller.dart';
 import 'package:http/http.dart' as http;
+import 'package:ta/app/modules/detail_pengukuran_tinggi_badan/controllers/detail_pengukuran_tinggi_badan_controller.dart';
 import '../../../api/api_services.dart';
 import '../../../models/balita.dart';
-import '../../../routes/app_pages.dart';
 import '../../detail_pengukuran_detak_jantung/controllers/detail_pengukuran_detak_jantung_controller.dart';
 import '../../detail_pengukuran_panjang_badan/controllers/detail_pengukuran_panjang_badan_controller.dart';
 import '../../home/controllers/home_controller.dart';
@@ -21,6 +21,8 @@ class EditBalitaController extends GetxController {
       Get.put(DetailPengukuranBeratBadanController());
   final DetailPengukuranPanjangBadanController controllerPanjangBayi =
       Get.put(DetailPengukuranPanjangBadanController());
+  final DetailPengukuranTinggiBadanController controllerTinggiBayi =
+      Get.put(DetailPengukuranTinggiBadanController());
   final DetailPengukuranDetakJantungController controllerDetakJantung =
       Get.put(DetailPengukuranDetakJantungController());
   final HomeController controllerUrlBalita = Get.put(HomeController());
@@ -98,12 +100,19 @@ class EditBalitaController extends GetxController {
     klasifikasi_detak_jantung.value = result.klasifikasi;
   }
 
-  // get clasification panjang badan
-  void getPanjangBadan() {
-    var result = getKlasifikasiPanjangBadan(jk.value, usia.value,
-        double.parse(controllerPanjangBayi.panjangBayi.value));
-    klasifikasi_panjang_badan.value = result.klasifikasi;
-    zscore_panjang_badan.value = result.zscore;
+  // get clasification panjang dan tinggi badan
+  void getPanjangDanTinggiBadan() {
+    if (usia.value < 10) {
+      var result = getKlasifikasiPanjangBadan(jk.value, usia.value,
+          double.parse(controllerPanjangBayi.panjangBayi.value));
+      klasifikasi_panjang_badan.value = result.klasifikasi;
+      zscore_panjang_badan.value = result.zscore;
+    } else {
+      var result = getKlasifikasiPanjangBadan(jk.value, usia.value,
+          double.parse(controllerTinggiBayi.tinggiBayi.value));
+      klasifikasi_panjang_badan.value = result.klasifikasi;
+      zscore_panjang_badan.value = result.zscore;
+    }
   }
 
   // get clasification berat badan
@@ -159,6 +168,7 @@ class EditBalitaController extends GetxController {
   void onInit() {
     super.onInit();
     // get url
+    usia.value = balita.umur;
     puskesmasId.value = balita.puskesmasId;
     posyanduId.value = balita.posyanduId;
     var resultUrl = urlBalita(balita.id);
@@ -171,7 +181,11 @@ class EditBalitaController extends GetxController {
     namaIbuC.text = balita.namaIbu;
     alamatC.text = balita.alamat;
     jk.value = balita.jenisKelamin;
-    controllerPanjangBayi.panjangBayi.value = balita.panjangBadan.toString();
+    if (balita.umur < 10) {
+      controllerPanjangBayi.panjangBayi.value = balita.panjangBadan.toString();
+    } else {
+      controllerTinggiBayi.tinggiBayi.value = balita.panjangBadan.toString();
+    }
     controllerBeratBayi.beratBayi.value = balita.beratBadan.toString();
     controllerDetakJantung.detakBayi.value = balita.detakJantung.toString();
     controllerDetakJantung.diastolikBayi.value = balita.diastolik.toString();
@@ -181,6 +195,7 @@ class EditBalitaController extends GetxController {
     var resultTanggalLahir =
         controllerAddBalita.getTanggalLahir(balita.tanggalLahir);
     usiaC.text = resultTanggalLahir.tanggal_lahir;
+    print("ini usia balita: ${usia.value}");
   }
 
   @override

@@ -219,10 +219,13 @@ class HomeView extends GetView<HomeController> {
                                                         : ElevatedButton(
                                                             onPressed:
                                                                 () async {
-                                                              controller
+                                                              await controller
                                                                   .deleteBalita(
                                                                       balita
                                                                           .id);
+                                                              Utils.showMySnackbar(
+                                                                  context,
+                                                                  "Data balita berhasil dihapus");
                                                             },
                                                             child: Text("Ya")),
                                                   ),

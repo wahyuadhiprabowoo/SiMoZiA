@@ -22,6 +22,8 @@ abstract class Routes {
   static const TESTING = _Paths.TESTING;
   static const AUTH = _Paths.AUTH;
   static const LUPA_PASSWORD = _Paths.LUPA_PASSWORD;
+  static const DETAIL_PENGUKURAN_TINGGI_BADAN =
+      _Paths.DETAIL_PENGUKURAN_TINGGI_BADAN;
 }
 
 abstract class _Paths {
@@ -42,4 +44,6 @@ abstract class _Paths {
   static const TESTING = '/testing';
   static const AUTH = '/auth';
   static const LUPA_PASSWORD = '/lupa-password';
+  static const DETAIL_PENGUKURAN_TINGGI_BADAN =
+      '/detail-pengukuran-tinggi-badan';
 }

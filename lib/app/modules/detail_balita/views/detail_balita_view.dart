@@ -118,12 +118,14 @@ class DetailBalitaView extends GetView<DetailBalitaController> {
                               ),
                               Expanded(
                                   flex: 2,
-                                  child: Text(controller.balita.umur < 12
+                                  child: Text(controller.balita.umur < 10
                                       ? "Panjang Badan"
                                       : "Tinggi Badan ")),
                               Expanded(
                                   flex: 1,
-                                  child: Text(controller.panjangBadan.value)),
+                                  child: Text(controller.balita.umur < 10
+                                      ? controller.panjangBadan.value
+                                      : controller.tinggiBadan.value)),
                               Expanded(
                                   flex: 1,
                                   child: Text(controller.zscorePanjang.value)),
@@ -163,33 +165,34 @@ class DetailBalitaView extends GetView<DetailBalitaController> {
                             ],
                           ),
 
-                          Divider(
-                            color: Colors.grey, // Warna garis bawah
-                            thickness: 0.7, // Ketebalan garis bawah
-                          ),
+                          // Divider(
+                          //   color: Colors.grey, // Warna garis bawah
+                          //   thickness: 0.7, // Ketebalan garis bawah
+                          // ),
                           // detak jantung
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: 12,
-                              ),
-                              Expanded(flex: 2, child: Text("Detak Jantung")),
-                              Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                      controller.detakJantung.value == "0 bpm"
-                                          ? "-"
-                                          : controller.detakJantung.value)),
-                              Expanded(flex: 1, child: Text("-")),
-                              Expanded(
-                                  flex: 1,
-                                  child: Text(controller
-                                      .klasifikasiDetakJantung.value)),
-                              SizedBox(
-                                width: 12,
-                              ),
-                            ],
-                          ),
+                          // Row(
+                          //   children: [
+                          //     SizedBox(
+                          //       width: 12,
+                          //     ),
+                          //     Expanded(flex: 2, child: Text("Detak Jantung")),
+                          //     Expanded(
+                          //         flex: 1,
+                          //         child: Text(
+                          //             controller.detakJantung.value == "0 bpm"
+                          //                 ? "-"
+                          //                 : controller.detakJantung.value)),
+                          //     Expanded(flex: 1, child: Text("-")),
+                          //     Expanded(
+                          //         flex: 1,
+                          //         child: Text(controller
+                          //             .klasifikasiDetakJantung.value)),
+                          //     SizedBox(
+                          //       width: 12,
+                          //     ),
+                          //   ],
+                          // ),
+
                           SizedBox(
                             height: 12,
                           ),
@@ -197,70 +200,70 @@ class DetailBalitaView extends GetView<DetailBalitaController> {
                       ),
                       SizedBox(height: 20),
                       // tekanan darah
-                      Card(
-                        child: Column(children: [
-                          SizedBox(height: 12),
+                      // Card(
+                      //   child: Column(children: [
+                      //     SizedBox(height: 12),
 
-                          Text("Tekanan Darah"),
-                          Divider(
-                            color: Colors.grey, // Warna garis bawah
-                            thickness: 0.7, // Ketebalan garis bawah
-                          ),
-                          //  pengukuran
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: 12,
-                              ),
-                              Expanded(flex: 2, child: Text("Pengukuran ")),
-                              Expanded(flex: 1, child: Text("Hasil")),
-                              SizedBox(
-                                width: 12,
-                              ),
-                            ],
-                          ),
-                          Divider(
-                            color: Colors.grey, // Warna garis bawah
-                            thickness: 0.7, // Ketebalan garis bawah
-                          ),
-                          // sistolik
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: 12,
-                              ),
-                              Expanded(flex: 2, child: Text("Sistolik")),
-                              Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                      controller.sistolik.value == "0 sys"
-                                          ? "-"
-                                          : controller.sistolik.value)),
-                              SizedBox(width: 12),
-                            ],
-                          ),
-                          SizedBox(height: 12),
+                      //     Text("Tekanan Darah"),
+                      //     Divider(
+                      //       color: Colors.grey, // Warna garis bawah
+                      //       thickness: 0.7, // Ketebalan garis bawah
+                      //     ),
+                      //     //  pengukuran
+                      //     Row(
+                      //       children: [
+                      //         SizedBox(
+                      //           width: 12,
+                      //         ),
+                      //         Expanded(flex: 2, child: Text("Pengukuran ")),
+                      //         Expanded(flex: 1, child: Text("Hasil")),
+                      //         SizedBox(
+                      //           width: 12,
+                      //         ),
+                      //       ],
+                      //     ),
+                      //     Divider(
+                      //       color: Colors.grey, // Warna garis bawah
+                      //       thickness: 0.7, // Ketebalan garis bawah
+                      //     ),
+                      //     // sistolik
+                      //     Row(
+                      //       children: [
+                      //         SizedBox(
+                      //           width: 12,
+                      //         ),
+                      //         Expanded(flex: 2, child: Text("Sistolik")),
+                      //         Expanded(
+                      //             flex: 1,
+                      //             child: Text(
+                      //                 controller.sistolik.value == "0 sys"
+                      //                     ? "-"
+                      //                     : controller.sistolik.value)),
+                      //         SizedBox(width: 12),
+                      //       ],
+                      //     ),
+                      //     SizedBox(height: 12),
 
-                          // diastolik
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: 12,
-                              ),
-                              Expanded(flex: 2, child: Text("Diastolik")),
-                              Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                      controller.diastolik.value == "0 dia"
-                                          ? "-"
-                                          : controller.diastolik.value)),
-                              SizedBox(width: 12),
-                            ],
-                          ),
-                          SizedBox(height: 12),
-                        ]),
-                      ),
-                      SizedBox(height: 24),
+                      //     // diastolik
+                      //     Row(
+                      //       children: [
+                      //         SizedBox(
+                      //           width: 12,
+                      //         ),
+                      //         Expanded(flex: 2, child: Text("Diastolik")),
+                      //         Expanded(
+                      //             flex: 1,
+                      //             child: Text(
+                      //                 controller.diastolik.value == "0 dia"
+                      //                     ? "-"
+                      //                     : controller.diastolik.value)),
+                      //         SizedBox(width: 12),
+                      //       ],
+                      //     ),
+                      //     SizedBox(height: 12),
+                      //   ]),
+                      // ),
+                      // SizedBox(height: 24),
                       Container(
                         height: 47,
                         width: double.infinity,

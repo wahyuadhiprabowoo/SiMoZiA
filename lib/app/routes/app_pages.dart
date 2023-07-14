@@ -10,6 +10,8 @@ import 'package:ta/app/modules/detail_pengukuran_detak_jantung/bindings/detail_p
 import 'package:ta/app/modules/detail_pengukuran_detak_jantung/views/detail_pengukuran_detak_jantung_view.dart';
 import 'package:ta/app/modules/detail_pengukuran_panjang_badan/bindings/detail_pengukuran_panjang_badan_binding.dart';
 import 'package:ta/app/modules/detail_pengukuran_panjang_badan/views/detail_pengukuran_panjang_badan_view.dart';
+import 'package:ta/app/modules/detail_pengukuran_tinggi_badan/bindings/detail_pengukuran_tinggi_badan_binding.dart';
+import 'package:ta/app/modules/detail_pengukuran_tinggi_badan/views/detail_pengukuran_tinggi_badan_view.dart';
 import 'package:ta/app/modules/edit_balita/bindings/edit_balita_binding.dart';
 import 'package:ta/app/modules/edit_balita/views/edit_balita_view.dart';
 import 'package:ta/app/modules/edit_profile/bindings/edit_profile_binding.dart';
@@ -92,6 +94,11 @@ class AppPages {
       name: _Paths.LUPA_PASSWORD,
       page: () => LupaPasswordView(),
       binding: LupaPasswordBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_PENGUKURAN_TINGGI_BADAN,
+      page: () => DetailPengukuranTinggiBadanView(),
+      binding: DetailPengukuranTinggiBadanBinding(),
     ),
   ];
 }

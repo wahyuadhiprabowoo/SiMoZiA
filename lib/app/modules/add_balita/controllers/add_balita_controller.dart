@@ -7,6 +7,7 @@ import 'package:ta/app/modules/detail_pengukuran_berat_badan/controllers/detail_
 import 'package:intl/intl.dart';
 import 'package:ta/app/modules/detail_pengukuran_detak_jantung/controllers/detail_pengukuran_detak_jantung_controller.dart';
 import 'package:ta/app/modules/detail_pengukuran_panjang_badan/controllers/detail_pengukuran_panjang_badan_controller.dart';
+import 'package:ta/app/modules/detail_pengukuran_tinggi_badan/controllers/detail_pengukuran_tinggi_badan_controller.dart';
 
 import '../../../api/api_services.dart';
 
@@ -16,6 +17,8 @@ class AddBalitaController extends GetxController {
       Get.put(DetailPengukuranBeratBadanController());
   final DetailPengukuranPanjangBadanController controllerPanjangBayi =
       Get.put(DetailPengukuranPanjangBadanController());
+  final DetailPengukuranTinggiBadanController controllerTinggiBayi =
+      Get.put(DetailPengukuranTinggiBadanController());
   final DetailPengukuranDetakJantungController controllerDetakJantung =
       Get.put(DetailPengukuranDetakJantungController());
 // controller
@@ -75,12 +78,20 @@ class AddBalitaController extends GetxController {
     klasifikasi_detak_jantung.value = result.klasifikasi;
   }
 
-  // get clasification panjang badan
-  void getPanjangBadan() {
-    var result = getKlasifikasiPanjangBadan(
-        jk, usia.value, double.parse(controllerPanjangBayi.panjangBayi.value));
-    klasifikasi_panjang_badan.value = result.klasifikasi;
-    zscore_panjang_badan.value = result.zscore;
+  // get clasification panjang dan tinggi badan
+
+  void getPanjangDanTinggiBadan() {
+    if (usia.value < 10) {
+      var result = getKlasifikasiPanjangBadan(jk, usia.value,
+          double.parse(controllerPanjangBayi.panjangBayi.value));
+      klasifikasi_panjang_badan.value = result.klasifikasi;
+      zscore_panjang_badan.value = result.zscore;
+    } else {
+      var result = getKlasifikasiPanjangBadan(
+          jk, usia.value, double.parse(controllerTinggiBayi.tinggiBayi.value));
+      klasifikasi_panjang_badan.value = result.klasifikasi;
+      zscore_panjang_badan.value = result.zscore;
+    }
   }
 
   // get clasification berat badan

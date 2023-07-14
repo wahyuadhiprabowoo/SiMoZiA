@@ -13,6 +13,7 @@ class DetailBalitaController extends GetxController {
   TextEditingController jkC = TextEditingController();
   // variabel
   var panjangBadan = "".obs;
+  var tinggiBadan = "".obs;
   var beratBadan = "".obs;
   var detakJantung = "".obs;
   var sistolik = "".obs;
@@ -40,18 +41,24 @@ class DetailBalitaController extends GetxController {
     usiaC.text = "${balita.umur} bulan";
     jkC.text = balita.jenisKelamin;
     // pengukuran
-    panjangBadan.value = "${balita.panjangBadan} cm";
+    if (balita.umur < 10) {
+      panjangBadan.value = "${balita.panjangBadan} cm";
+    } else {
+      tinggiBadan.value = "${balita.panjangBadan} cm";
+    }
+
     beratBadan.value = "${balita.beratBadan} kg";
-    detakJantung.value = "${balita.detakJantung} bpm";
-    sistolik.value = "${balita.sistolik} sys";
-    diastolik.value = "${balita.diastolik} dia";
+    // detakJantung.value = "${balita.detakJantung} bpm";
+    // sistolik.value = "${balita.sistolik} sys";
+    // diastolik.value = "${balita.diastolik} dia";
     // zscore
+
     zscoreBerat.value = "${balita.zscoreBeratBadan}";
     zscorePanjang.value = "${balita.zscorePanjangBadan}";
     // klasifikasi
     klasifikasiPanjang.value = "${balita.klasifikasiPanjangBadan}";
     klasifikasiBerat.value = "${balita.klasifikasiBeratBadan}";
-    klasifikasiDetakJantung.value = "${balita.klasifikasiDetakJantung}";
+    // klasifikasiDetakJantung.value = "${balita.klasifikasiDetakJantung}";
   }
 
   @override
