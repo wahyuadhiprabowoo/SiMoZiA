@@ -134,8 +134,13 @@ class LupaPasswordView extends GetView<LupaPasswordController> {
                                 : ElevatedButton(
                                     child: Text("Kirim"),
                                     onPressed: () async {
-                                      await ApiService.forgotPassword(
-                                          controller.emailC.text);
+                                      controller.validateEmail(
+                                              controller.emailC.text)
+                                          ? await ApiService.forgotPassword(
+                                              controller.emailC.text)
+                                          : DialogBokInformasi.showAlertDialog(
+                                              context,
+                                              "Email tidak sesuai format");
                                     }),
                           ),
                         ),

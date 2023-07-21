@@ -67,6 +67,7 @@ class ApiService {
         await Future.delayed(Duration(seconds: 3));
         Get.offAllNamed(Routes.HOME);
       }
+      // akun tidak ditemukan
       if (response.statusCode == 401) {
         Get.dialog(
           AlertDialog(
@@ -75,7 +76,22 @@ class ApiService {
             actions: [
               ElevatedButton(
                   onPressed: () async {
-                    await ApiService.clearToken();
+                    Get.back();
+                  },
+                  child: Text("Ya"))
+            ],
+          ),
+        );
+      }
+      // hanya nakes yang boleh mengakses
+      if (response.statusCode == 404) {
+        Get.dialog(
+          AlertDialog(
+            title: Text('Peringatan'),
+            content: Text('Hanya admin yang boleh mengakses!'),
+            actions: [
+              ElevatedButton(
+                  onPressed: () async {
                     Get.back();
                   },
                   child: Text("Ya"))

@@ -13,8 +13,7 @@ class DetailBalitaView extends GetView<DetailBalitaController> {
     return Scaffold(
       backgroundColor: Color(AppColors.secondary),
       appBar: AppBar(
-        title: Text('DetailBalitaView'),
-        centerTitle: true,
+        title: Text('Detail Balita'),
       ),
       body: Obx(
         () => controller.isLoading.value
@@ -95,14 +94,14 @@ class DetailBalitaView extends GetView<DetailBalitaController> {
                           Row(
                             children: [
                               SizedBox(
-                                width: 12,
+                                width: 16,
                               ),
                               Expanded(flex: 2, child: Text("Pengukuran")),
                               Expanded(flex: 1, child: Text("Hasil")),
                               Expanded(flex: 1, child: Text("Zscore")),
                               Expanded(flex: 1, child: Text("Klasifikasi")),
                               SizedBox(
-                                width: 12,
+                                width: 16,
                               ),
                             ],
                           ),
@@ -114,7 +113,7 @@ class DetailBalitaView extends GetView<DetailBalitaController> {
                           Row(
                             children: [
                               SizedBox(
-                                width: 12,
+                                width: 16,
                               ),
                               Expanded(
                                   flex: 2,
@@ -134,7 +133,7 @@ class DetailBalitaView extends GetView<DetailBalitaController> {
                                   child: Text(
                                       controller.klasifikasiPanjang.value)),
                               SizedBox(
-                                width: 12,
+                                width: 16,
                               ),
                             ],
                           ),

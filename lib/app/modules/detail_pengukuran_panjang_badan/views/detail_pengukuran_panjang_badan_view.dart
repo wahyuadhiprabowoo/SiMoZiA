@@ -10,12 +10,12 @@ class DetailPengukuranPanjangBadanView
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final containerWidth = screenWidth * 0.5;
+    final containerWidth = screenWidth * 0.8;
     final containerWidthSeperEmpat = screenWidth * 0.4;
     return Scaffold(
       appBar: AppBar(
-        title: Text('DetailPengukuranPanjangBadanView'),
-        centerTitle: true,
+        title: Text('Panjang Badan'),
+        // centerTitle: true,
       ),
       body: SafeArea(
         child: Column(

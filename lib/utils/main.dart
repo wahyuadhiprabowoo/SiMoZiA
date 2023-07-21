@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
+import 'package:meta/meta.dart';
 
 import '../app/konstanta/colors.dart';
 
@@ -25,6 +27,42 @@ class LoadingScreen extends StatelessWidget {
       child: SpinKitPulse(
         color: color,
         size: size ?? 100,
+      ),
+    );
+  }
+}
+
+class DialogBokInformasi {
+  static void showAlertDialog(BuildContext context, String pesan) {
+    Get.dialog(
+      AlertDialog(
+        title: Text("Peringatan"),
+        content: Text(pesan),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: Text("Ya"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static void showSuccesDialog(BuildContext context, String pesan) {
+    Get.dialog(
+      AlertDialog(
+        title: Text("Berhasil"),
+        content: Text(pesan),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: Text("Ya"),
+          ),
+        ],
       ),
     );
   }

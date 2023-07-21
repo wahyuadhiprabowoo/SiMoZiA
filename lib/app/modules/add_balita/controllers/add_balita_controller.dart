@@ -186,6 +186,14 @@ class AddBalitaController extends GetxController {
 
   @override
   void onInit() {
+    namaC.text = "Balita ";
+    namaIbuC.text = "Ibu  ";
+    alamat.text = "Balita ";
+    // get string tanggal_lahir
+    DateTime tanggalLahir = DateTime.parse("2023-06-02T09:11:48.000000Z");
+    var resultTanggalLahir = getTanggalLahir(tanggalLahir);
+    usiaC.text = resultTanggalLahir.tanggal_lahir;
+    print("ini usia balita: ${usia.value}");
     super.onInit();
   }
 

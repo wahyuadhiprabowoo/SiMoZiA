@@ -20,8 +20,7 @@ class AddBalitaView extends GetView<AddBalitaController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('AddDataView'),
-        centerTitle: true,
+        title: Text('Tambah Data'),
       ),
       body: SingleChildScrollView(
           child: Padding(
@@ -32,6 +31,7 @@ class AddBalitaView extends GetView<AddBalitaController> {
               // puskesmas
               DropdownSearch<Puskesmas>(
                 // clearButton: Icon(Icons.delete),
+
                 showClearButton: true,
                 label: "Puskesmas",
                 hint: "Pilih Puskesmas",
@@ -442,8 +442,7 @@ class AddBalitaView extends GetView<AddBalitaController> {
                             "diastolik": int.tryParse(controller
                                 .controllerDetakJantung.diastolikBayi.value),
                           };
-                          print(dataPostBalita);
-                          print(panjang_tinggi);
+
                           await controller.postBalita(dataPostBalita);
                           Get.offAllNamed(Routes.HOME);
                           controller.showMySnackbar(

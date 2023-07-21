@@ -10,12 +10,12 @@ class DetailPengukuranTinggiBadanView
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final containerWidth = screenWidth * 0.5;
+    final containerWidth = screenWidth * 0.8;
     final containerWidthSeperEmpat = screenWidth * 0.4;
     return Scaffold(
       appBar: AppBar(
-        title: Text('DetailPengukuranTinggiBadanView'),
-        centerTitle: true,
+        title: Text('Tinggi Badan'),
+        // centerTitle: true,
       ),
       body: SafeArea(
         child: Column(
@@ -29,7 +29,7 @@ class DetailPengukuranTinggiBadanView
                   query: controller.refTinggi,
                   itemBuilder: (context, snapshot, animation, index) {
                     controller.tinggi =
-                        snapshot.child("tinggi_badan").value.toString();
+                        snapshot.child("tinggi").value.toString();
                     return Center(
                       child: Text(
                         controller.tinggi,

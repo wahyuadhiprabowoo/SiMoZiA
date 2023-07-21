@@ -46,14 +46,15 @@ class EditProfileView extends GetView<EditProfileController> {
                               icon: Icon(Icons.arrow_back),
                               color: Colors.white),
                           // Text Nama
-                          Obx(
-                            () => Padding(
-                              padding: const EdgeInsets.only(top: 64.0),
-                              child: Center(
-                                child: Text(
-                                  "${controller.nameUser.value}",
-                                  style: TextStyle(color: Colors.white),
-                                ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 64.0),
+                            child: Center(
+                              child: Text(
+                                "Profile",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w400),
                               ),
                             ),
                           ),

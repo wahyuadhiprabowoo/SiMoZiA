@@ -3,8 +3,9 @@ import 'package:firebase_database/firebase_database.dart';
 
 class DetailPengukuranBeratBadanController extends GetxController {
   FirebaseDatabase database = FirebaseDatabase.instance;
-  final refBerat = FirebaseDatabase.instance.ref('berat');
-  String berat = "0";
+  final DatabaseReference refBerat = FirebaseDatabase.instance.ref("berat");
+
+  var berat = "0";
   var beratBayi = "0".obs;
   final count = 0.obs;
   // RxInt panjangResult = ;
@@ -12,7 +13,8 @@ class DetailPengukuranBeratBadanController extends GetxController {
     // print("ini $berat");
     // result = panjang as RxString;
     beratBayi.value = berat;
-    print("ini berat bayi $beratBayi");
+    print("ini berat bayi ${beratBayi.value}");
+    print("ini berat $berat");
     Get.back();
   }
 

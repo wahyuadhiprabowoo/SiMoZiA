@@ -157,6 +157,7 @@ class RegisterView extends GetView<RegisterController> {
                     ? LoadingScreen(color: Colors.white)
                     : ElevatedButton(
                         onPressed: () async {
+                          // validation register
                           var register = {
                             'name': controller.nameC.text.trim(),
                             'email': controller.emailC.text.trim(),
@@ -164,7 +165,19 @@ class RegisterView extends GetView<RegisterController> {
                             'password_confirmation':
                                 controller.passConfirmationC.text.trim()
                           };
-                          await ApiService.register(register);
+                          if (controller.nameC.text.length <= 0 ||
+                              controller
+                                      .validateEmail(controller.emailC.text) ==
+                                  false ||
+                              controller.passC.text.length <= 8 ||
+                              controller.passConfirmationC.text !=
+                                  controller.passC.text) {
+                            // do something
+                            DialogBokInformasi.showAlertDialog(context,
+                                "Pastikan tidak ada field yang kosong! serta terisi dengan benar!");
+                          } else {
+                            await ApiService.register(register);
+                          }
                         },
                         child: Text("Buat akun")),
               ),

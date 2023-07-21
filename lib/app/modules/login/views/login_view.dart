@@ -113,6 +113,7 @@ class LoginView extends GetView<LoginController> {
                             ),
                           ),
                         ),
+
                         SizedBox(height: 24),
                         // password
                         Obx(
@@ -149,12 +150,6 @@ class LoginView extends GetView<LoginController> {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  print("masukan password anda");
-                                }
-                                return null;
-                              },
                             ),
                           ),
                         ),
@@ -190,11 +185,28 @@ class LoginView extends GetView<LoginController> {
                           : ElevatedButton(
                               child: Text("Masuk"),
                               onPressed: () async {
-                                var body = {
-                                  "email": controller.emailC.text.trim(),
-                                  "password": controller.passC.text.trim()
-                                };
-                                await ApiService.login(body);
+                                if (controller.passC.text.length < 8 &&
+                                    controller.validateEmail(
+                                            controller.emailC.text) ==
+                                        false) {
+                                  DialogBokInformasi.showAlertDialog(context,
+                                      "Email dan password harus benar!");
+                                } else if (controller.passC.text.length < 8) {
+                                  DialogBokInformasi.showAlertDialog(
+                                      context, "Password minimal 8");
+                                } else if (controller.validateEmail(
+                                        controller.emailC.text) ==
+                                    false) {
+                                  DialogBokInformasi.showAlertDialog(
+                                      context, "Email anda salah!");
+                                } else {
+                                  // send data to api
+                                  var body = {
+                                    "email": controller.emailC.text.trim(),
+                                    "password": controller.passC.text.trim()
+                                  };
+                                  await ApiService.login(body);
+                                }
                               });
                     },
                   )),

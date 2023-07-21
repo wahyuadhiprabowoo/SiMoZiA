@@ -19,8 +19,7 @@ class EditBalitaView extends GetView<EditBalitaController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('EditBalitaView'),
-        centerTitle: true,
+        title: Text('Edit Balita'),
       ),
       body: SingleChildScrollView(
         child: SafeArea(

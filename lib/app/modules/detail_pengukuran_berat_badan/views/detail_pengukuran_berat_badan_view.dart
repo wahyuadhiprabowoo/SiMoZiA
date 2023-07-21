@@ -14,8 +14,8 @@ class DetailPengukuranBeratBadanView
     final containerWidthSeperEmpat = screenWidth * 0.4;
     return Scaffold(
       appBar: AppBar(
-        title: Text('DetailPengukuranBeratBadanView'),
-        centerTitle: true,
+        title: Text('Berat Badan'),
+        // centerTitle: true,
       ),
       body: SafeArea(
         child: Column(
@@ -30,6 +30,7 @@ class DetailPengukuranBeratBadanView
                   itemBuilder: (context, snapshot, animation, index) {
                     controller.berat =
                         snapshot.child("berat_badan").value.toString();
+                    print("ini berat ${controller.berat}");
                     return Center(
                       child: Text(
                         controller.berat,
